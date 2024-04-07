@@ -17,23 +17,10 @@ message Service {
     uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
     string service_name = 2;
     string service_description = 3;
-    google.protobuf.Timestamp crated_at = 4;
-    google.protobuf.Timestamp updated_at = 5;
-    google.protobuf.Timestamp deleted_at = 6;
-}
-
-message ServiceRoles {
-    option (gorm.opts) = {
-        ormable:true,
-        table: "services_roles",
-    };
-
-    uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
-    repeated role.v1.Role roles = 2 [(gorm.field).many_to_many = {}];
-    repeated Service services = 3 [(gorm.field).many_to_many = {}];
-    google.protobuf.Timestamp crated_at = 4;
-    google.protobuf.Timestamp updated_at = 5;
-    google.protobuf.Timestamp deleted_at = 6;
+    repeated role.v1.Role roles = 4  [(gorm.field).many_to_many = {}];
+    google.protobuf.Timestamp crated_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    google.protobuf.Timestamp deleted_at = 7;
 }
 
 message Feature {

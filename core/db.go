@@ -1,10 +1,15 @@
 package core
 
 import (
-	"github.com/sandisuryadi36/sansan-dashboard/libs"
 	"database/sql"
 	"log"
 	"os"
+
+	featurev1 "github.com/sandisuryadi36/sansan-dashboard/gen/feature/v1"
+	rolev1 "github.com/sandisuryadi36/sansan-dashboard/gen/role/v1"
+	transactionv1 "github.com/sandisuryadi36/sansan-dashboard/gen/transaction/v1"
+	userv1 "github.com/sandisuryadi36/sansan-dashboard/gen/user/v1"
+	"github.com/sandisuryadi36/sansan-dashboard/libs"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -64,20 +69,31 @@ func MigrateDB() error {
 	InitDBMain()
 	defer CloseDBMain()
 
+	ormList := []interface{}{
+		&rolev1.RoleORM{},
+		&userv1.UserORM{},
+		&featurev1.FeatureORM{},
+		&featurev1.ServiceORM{},
+		&featurev1.UserExtraFeatureORM{},
+		&featurev1.FeatureTransactionORM{},
+		&transactionv1.UserTransactionORM{},
+	}
+
 	migrator := DBMain.Migrator()
-	if migrator.HasTable(
-		// List table ORM from proto gorm
-		// &authv1.AuthORM{},
-		nil,
-	) {
-		log.Println("Table already exists, no migration needed")
-		return nil
+	for _, orm := range ormList {
+		if migrator.HasTable(
+			// List table ORM from proto gorm\
+			orm,
+		) {
+			log.Println("Table already exists, no migration needed")
+			return nil
+		}
 	}
 
 	log.Println("Migration process begin...")
 	if err := DBMain.AutoMigrate(
 		// List table from proto gorm
-		// &authv1.AuthORM{},
+		ormList...
 	); err != nil {
 		log.Fatalf("Migration failed: %v", err)
 		os.Exit(1)
