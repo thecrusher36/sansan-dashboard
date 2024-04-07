@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package transaction.v1;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-gorm/options/gorm.proto";
+import "user/v1/user_gorm.proto";
+
+message UserTransaction {
+    option (gorm.opts) = {
+        ormable:true,
+        table: "user_transactions",
+    };
+
+    uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
+    user.v1.User user = 2 [(gorm.field).belongs_to = {}];
+    string transaction_status = 3;
+    google.protobuf.Timestamp transaction_date = 4;
+    google.protobuf.Timestamp crated_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    google.protobuf.Timestamp deleted_at = 7;
+}

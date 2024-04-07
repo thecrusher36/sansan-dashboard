@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-gorm/options/gorm.proto";
+import "role/v1/role_gorm.proto";
+
+message User {
+    option (gorm.opts) = {
+        ormable:true,
+        table: "users",
+    };
+
+    uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
+    string user_name = 2;
+    string email = 3;
+    string name = 4;
+    string hashed_password = 5;
+    role.v1.Role role = 6 [(gorm.field).belongs_to = {}];
+    google.protobuf.Timestamp crated_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+    google.protobuf.Timestamp deleted_at = 9;
+}

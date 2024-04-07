@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package role.v1;
+
+import "google/api/annotations.proto";
+import "role/v1/role_gorm.proto";
+
+service RoleService {
+    rpc GetRoleList(GetRoleListRequest) returns (GetRoleListResponse) {
+        option (google.api.http) = {
+            get : "/v1/roles"
+    };
+    }
+}
+
+message StandardResponse {
+    string message = 1;
+    uint64 code = 2;
+    string error_message = 3;
+}
+
+message GetRoleListRequest {}
+
+message GetRoleListResponse {
+    repeated Role roles = 1;
+    StandardResponse response = 2;
+}

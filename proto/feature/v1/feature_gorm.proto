@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package role.v1;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-gorm/options/gorm.proto";
+import "role/v1/role_gorm.proto";
+import "user/v1/user_gorm.proto";
+import "transaction/v1/transaction_gorm.proto";
+
+message Service {
+    option (gorm.opts) = {
+        ormable:true,
+        table: "services",
+    };
+
+    uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
+    string service_name = 2;
+    string service_description = 3;
+    google.protobuf.Timestamp crated_at = 4;
+    google.protobuf.Timestamp updated_at = 5;
+    google.protobuf.Timestamp deleted_at = 6;
+}
+
+message ServiceRoles {
+    option (gorm.opts) = {
+        ormable:true,
+        table: "services_roles",
+    };
+
+    uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
+    repeated role.v1.Role roles = 2 [(gorm.field).many_to_many = {}];
+    repeated Service services = 3 [(gorm.field).many_to_many = {}];
+    google.protobuf.Timestamp crated_at = 4;
+    google.protobuf.Timestamp updated_at = 5;
+    google.protobuf.Timestamp deleted_at = 6;
+}
+
+message Feature {
+    option (gorm.opts) = {
+        ormable:true,
+        table: "features",
+    };
+
+    uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
+    string feature_name = 2;
+    string feature_description = 3;
+    Service service = 4 [(gorm.field).belongs_to = {}];
+    bool is_default = 5;
+    google.protobuf.Timestamp crated_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    google.protobuf.Timestamp deleted_at = 8;
+}
+
+message UserExtraFeature {
+    option (gorm.opts) = {
+        ormable:true,
+        table: "user_extra_features",
+    };
+
+    uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
+    user.v1.User user = 2 [(gorm.field).belongs_to = {}];
+    Feature feature = 3 [(gorm.field).belongs_to = {}];
+    FeatureTransaction feature_transaction = 4 [(gorm.field).belongs_to = {}];
+    google.protobuf.Timestamp crated_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    google.protobuf.Timestamp deleted_at = 7;
+}
+
+message FeatureTransaction {
+    option (gorm.opts) = {
+        ormable:true,
+        table: "feature_transactions",
+    };
+
+    uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
+    transaction.v1.UserTransaction user_transaction = 2 [(gorm.field).belongs_to = {}];
+    Feature feature = 3 [(gorm.field).belongs_to = {}];
+    google.protobuf.Timestamp expired_date = 4;
+    google.protobuf.Timestamp crated_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    google.protobuf.Timestamp deleted_at = 7;
+}

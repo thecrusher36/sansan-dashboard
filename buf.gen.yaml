@@ -1,0 +1,28 @@
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/sandisuryadi36/sansan-dashboard/gen
+    except:
+      - buf.build/googleapis/googleapis
+plugins:
+  - plugin: go
+    out: gen
+    opt:
+      - paths=source_relative
+  - plugin: connect-go
+    out: gen
+    opt:
+      - paths=source_relative
+  - plugin: go-grpc
+    out: gen
+    opt:
+      - paths=source_relative
+  - plugin: grpc-gateway
+    out: gen
+    opt:
+      - paths=source_relative
+  - plugin: gorm
+    out: gen
+    opt:
+      - paths=source_relative

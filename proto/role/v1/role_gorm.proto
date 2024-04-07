@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package role.v1;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-gorm/options/gorm.proto";
+
+message Role {
+    option (gorm.opts) = {
+        ormable:true,
+        table: "roles",
+    };
+
+    uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
+    string role_name = 2;
+    string role_description = 3;
+    google.protobuf.Timestamp crated_at = 4;
+    google.protobuf.Timestamp updated_at = 5;
+    google.protobuf.Timestamp deleted_at = 6;
+}
