@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"connectrpc.com/connect"
+	commonv1 "github.com/sandisuryadi36/sansan-dashboard/gen/common/v1"
 	rolev1 "github.com/sandisuryadi36/sansan-dashboard/gen/role/v1"
 	"github.com/sandisuryadi36/sansan-dashboard/gen/role/v1/rolev1connect"
 	"github.com/sandisuryadi36/sansan-dashboard/repository"
@@ -27,7 +28,7 @@ func (h *RoleServiceHandler) GetRoleList(ctx context.Context, req *connect.Reque
 	
 	res = connect.NewResponse(&rolev1.GetRoleListResponse{
 		Roles: roles,
-		HttpStatus: &rolev1.StandardResponse{
+		HttpStatus: &commonv1.StandardResponse{
 			Message: "success",
 			Code: http.StatusOK,
 		},

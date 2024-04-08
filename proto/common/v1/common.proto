@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package common.v1;
+
+message StandardResponse {
+    string message = 1;
+    uint64 code = 2;
+    string error_message = 3;
+}

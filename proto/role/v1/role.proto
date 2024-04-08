@@ -4,6 +4,7 @@ package role.v1;
 
 import "google/api/annotations.proto";
 import "role/v1/role_gorm.proto";
+import "common/v1/common.proto";
 
 service RoleService {
     rpc GetRoleList(GetRoleListRequest) returns (GetRoleListResponse) {
@@ -13,15 +14,9 @@ service RoleService {
     }
 }
 
-message StandardResponse {
-    string message = 1;
-    uint64 code = 2;
-    string error_message = 3;
-}
-
 message GetRoleListRequest {}
 
 message GetRoleListResponse {
     repeated Role roles = 1;
-    StandardResponse http_status = 2;
+    common.v1.StandardResponse http_status = 2;
 }
