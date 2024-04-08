@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	var rpcPort int = 9090
-	var httpPort int = 8080
+	var rpcPort int = 9091
+	var httpPort int = 8081
 
 	// migrate DB
 	core.MigrateDB()
@@ -25,7 +25,10 @@ func main() {
 			Repo: *repository.NewUserRepository(core.DBMain),
 		},
 	)
-	path, handler := userv1connect.NewUserServiceHandler(serviceHandler.ServiceHandler.(*handler.UserServiceHandler))
+	path, handler := userv1connect.NewUserServiceHandler(
+		serviceHandler.ServiceHandler.(*handler.UserServiceHandler),
+		apps.NewInterceotors(),
+	)
 
 	// run the server
 	apps.RunServer(apps.ServerSpec{

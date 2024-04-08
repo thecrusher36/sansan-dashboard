@@ -25,7 +25,10 @@ func main() {
 			Repo: *repository.NewRoleRepository(core.DBMain),
 		},
 	)
-	path, handler := rolev1connect.NewRoleServiceHandler(serviceHandler.ServiceHandler.(*handler.RoleServiceHandler))
+	path, handler := rolev1connect.NewRoleServiceHandler(
+		serviceHandler.ServiceHandler.(*handler.RoleServiceHandler),
+		apps.NewInterceotors(),
+	)
 
 	// run the server
 	apps.RunServer(apps.ServerSpec{

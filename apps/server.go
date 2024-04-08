@@ -58,7 +58,7 @@ func RunServer(s ServerSpec) {
 	go func() {
 		log.Printf("Starting RPC server on localhost:%v...", s.RpcPort)
 		err := http.ListenAndServe(
-			":9090",
+			fmt.Sprintf(`:%v`, s.RpcPort),
 			h2c.NewHandler(rpcMux, &http2.Server{}),
 		)
 		if err != nil {
