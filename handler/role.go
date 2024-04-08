@@ -25,15 +25,13 @@ func (h *RoleServiceHandler) GetRoleList(ctx context.Context, req *connect.Reque
 		return
 	}
 	
-	res = &connect.Response[rolev1.GetRoleListResponse]{
-		Msg: &rolev1.GetRoleListResponse{
-			Roles: roles,
-			HttpStatus: &rolev1.StandardResponse{
-				Message: "success",
-				Code: http.StatusOK,
-			},
+	res = connect.NewResponse(&rolev1.GetRoleListResponse{
+		Roles: roles,
+		HttpStatus: &rolev1.StandardResponse{
+			Message: "success",
+			Code: http.StatusOK,
 		},
-	}
+	})
 
-	return
+	return 
 }
