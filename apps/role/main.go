@@ -18,6 +18,7 @@ func main() {
 
 	// start DB connection
 	core.StartDBConnection()
+	defer core.CloseDBMain()
 
 	// initiate RPC path and handler
 	serviceHandler := handler.NewHandler(
@@ -39,5 +40,4 @@ func main() {
 		HttpPort:                           httpPort,
 	})
 
-	core.CloseDBMain()
 }
