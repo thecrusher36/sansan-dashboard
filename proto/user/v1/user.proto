@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "common/v1/common.proto";
+import "google/api/annotations.proto";
+import "user/v1/user_gorm.proto";
+
+service UserService {
+    rpc GetUserList(GetUserListRequest) returns (GetUserListResponse) {
+        option (google.api.http) = {
+            get: "/v1/users"
+        };
+    }
+    rpc AddUser(AddUserRequest) returns (AddUserResponse) {
+        option (google.api.http) = {
+            post: "/v1/user"
+            body: "*"
+        };
+    }
+}
+
+message GetUserListRequest {}
+
+message GetUserListResponse {
+    repeated User users = 1;
+    common.v1.StandardResponse http_status = 2;
+}
+
+message AddUserRequest {
+    string user_name = 1;
+    string email = 2;
+    string name = 3;
+    string password = 4;
+    string re_password = 5;
+}
+
+message AddUserResponse {
+    string message = 1;
+    common.v1.StandardResponse http_status = 2;
+}
