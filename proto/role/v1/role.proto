@@ -23,5 +23,5 @@ message GetRoleListRequest {}
 
 message GetRoleListResponse {
     repeated Role roles = 1;
-    StandardResponse response = 2;
+    StandardResponse http_status = 2;
 }

@@ -79,17 +79,6 @@ func MigrateDB() error {
 		&transactionv1.UserTransactionORM{},
 	}
 
-	migrator := DBMain.Migrator()
-	for _, orm := range ormList {
-		if migrator.HasTable(
-			// List table ORM from proto gorm\
-			orm,
-		) {
-			log.Println("Table already exists, no migration needed")
-			return nil
-		}
-	}
-
 	log.Println("Migration process begin...")
 	if err := DBMain.AutoMigrate(
 		// List table from proto gorm
