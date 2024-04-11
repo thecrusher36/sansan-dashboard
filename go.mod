@@ -8,6 +8,7 @@ require (
 	github.com/infobloxopen/atlas-app-toolkit/v2 v2.2.1
 	github.com/infobloxopen/protoc-gen-gorm v1.1.4
 	github.com/joho/godotenv v1.5.1
+	github.com/sirupsen/logrus v1.9.3
 	golang.org/x/net v0.22.0
 	google.golang.org/genproto v0.0.0-20240401170217-c3f982113cda
 	google.golang.org/genproto/googleapis/api v0.0.0-20240401170217-c3f982113cda

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/sandisuryadi36/sansan-dashboard/apps"
 	"github.com/sandisuryadi36/sansan-dashboard/core"
 	rolev1 "github.com/sandisuryadi36/sansan-dashboard/gen/role/v1"
 	"github.com/sandisuryadi36/sansan-dashboard/gen/role/v1/rolev1connect"
@@ -28,11 +27,11 @@ func main() {
 	)
 	path, handler := rolev1connect.NewRoleServiceHandler(
 		serviceHandler.ServiceHandler.(*handler.RoleServiceHandler),
-		apps.NewInterceotors(),
+		core.NewInterceotors(),
 	)
 
 	// run the server
-	apps.RunServer(apps.ServerSpec{
+	core.RunServer(core.ServerSpec{
 		RpcPath:                            path,
 		RpcHandler:                         handler,
 		RegisterServiceHandlerFromEndpoint: rolev1.RegisterRoleServiceHandlerFromEndpoint,

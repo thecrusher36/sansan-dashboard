@@ -1,8 +1,9 @@
-package apps
+package core
 
 import (
 	"context"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"connectrpc.com/connect"
 )
@@ -16,7 +17,7 @@ func NewInterceotors() connect.HandlerOption {
 func LogInterceptor() connect.UnaryInterceptorFunc {
 	interceptor := func(next connect.UnaryFunc) connect.UnaryFunc {
 		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			log.Printf(`%v: %v %v`, req.HTTPMethod(), req.Spec().Procedure, req.Peer().Protocol)
+			log.Printf(`%v: %v`, req.Peer().Protocol, req.Spec().Procedure)
 			return next(ctx, req)
 		})
 	}

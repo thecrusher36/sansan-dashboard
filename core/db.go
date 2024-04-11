@@ -2,8 +2,9 @@ package core
 
 import (
 	"database/sql"
-	"log"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	featurev1 "github.com/sandisuryadi36/sansan-dashboard/gen/feature/v1"
 	rolev1 "github.com/sandisuryadi36/sansan-dashboard/gen/role/v1"
@@ -82,7 +83,7 @@ func MigrateDB() error {
 	log.Println("Migration process begin...")
 	if err := DBMain.AutoMigrate(
 		// List table from proto gorm
-		ormList...
+		ormList...,
 	); err != nil {
 		log.Fatalf("Migration failed: %v", err)
 		os.Exit(1)

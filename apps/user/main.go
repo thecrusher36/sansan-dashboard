@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/sandisuryadi36/sansan-dashboard/apps"
 	"github.com/sandisuryadi36/sansan-dashboard/core"
 	userv1 "github.com/sandisuryadi36/sansan-dashboard/gen/user/v1"
 	"github.com/sandisuryadi36/sansan-dashboard/gen/user/v1/userv1connect"
@@ -28,11 +27,11 @@ func main() {
 	)
 	path, handler := userv1connect.NewUserServiceHandler(
 		serviceHandler.ServiceHandler.(*handler.UserServiceHandler),
-		apps.NewInterceotors(),
+		core.NewInterceotors(),
 	)
 
 	// run the server
-	apps.RunServer(apps.ServerSpec{
+	core.RunServer(core.ServerSpec{
 		RpcPath:                            path,
 		RpcHandler:                         handler,
 		RegisterServiceHandlerFromEndpoint: userv1.RegisterUserServiceHandlerFromEndpoint,
