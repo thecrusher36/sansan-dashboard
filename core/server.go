@@ -8,9 +8,8 @@ import (
 	"os"
 	"os/signal"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/sandisuryadi36/sansan-dashboard/libs/logger"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
@@ -35,12 +34,14 @@ func RunServer(s ServerSpec) {
 	rpcMux.Handle(s.RpcPath, s.RpcHandler)
 
 	// Initiate RPC-gateway Mux
-	httpMux := runtime.NewServeMux()
+	httpMux := runtime.NewServeMux(
+		runtime.WithErrorHandler(CustomHTTPError),
+	)
 
 	// Register HTTP handler for RPC service
 	err := s.RegisterServiceHandlerFromEndpoint(ctx, httpMux, fmt.Sprintf("localhost:%d", s.RpcPort), []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
 	if err != nil {
-		log.Fatalf("Failed to register HTTP gateway: %v", err)
+		logger.Fatalf("Failed to register HTTP gateway: %v", err)
 	}
 
 	// Initiate HTTP server
@@ -52,27 +53,27 @@ func RunServer(s ServerSpec) {
 	// Initiate listener for HTTP gateway
 	httpListener, err := net.Listen("tcp", fmt.Sprintf(":%v", s.HttpPort))
 	if err != nil {
-		log.Fatalf("Failed to listen: %v", err)
+		logger.Fatalf("Failed to listen: %v", err)
 	}
 
 	// serve RPC
 	go func() {
-		log.Printf("Starting RPC server on localhost:%v...", s.RpcPort)
+		logger.Printf("Starting RPC server on localhost:%v...", s.RpcPort)
 		err := http.ListenAndServe(
 			fmt.Sprintf(`:%v`, s.RpcPort),
 			h2c.NewHandler(rpcMux, &http2.Server{}),
 		)
 		if err != nil {
-			log.Fatalln("Fail to serve the server")
+			logger.Fatalln("Fail to serve the server")
 		}
 	}()
 
 	// serve RPC-gateway
 	go func() {
-		log.Printf("Starting HTTP server on localhost:%v...", s.HttpPort)
+		logger.Printf("Starting HTTP server on localhost:%v...", s.HttpPort)
 		err = httpServer.Serve(httpListener)
 		if err != nil {
-			log.Fatalf("Failed to serve HTTP server: %v", err)
+			logger.Fatalf("Failed to serve HTTP server: %v", err)
 		}
 	}()
 

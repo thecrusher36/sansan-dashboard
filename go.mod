@@ -4,6 +4,7 @@ go 1.22.2
 
 require (
 	connectrpc.com/connect v1.16.0
+	github.com/grpc-ecosystem/grpc-gateway v1.14.6
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1
 	github.com/infobloxopen/atlas-app-toolkit/v2 v2.2.1
 	github.com/infobloxopen/protoc-gen-gorm v1.1.4
