@@ -30,9 +30,9 @@ type UserServiceHandler struct {
 	Repo repository.UserRepository
 }
 
-func NewUserHandler(s UserServiceHandler) *UserServiceHandler {
+func NewUserHandler(repo repository.UserRepository) *UserServiceHandler {
 	return &UserServiceHandler{
-		Repo: s.Repo,
+		Repo: repo,
 	}
 }
 

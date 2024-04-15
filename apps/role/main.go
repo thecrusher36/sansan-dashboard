@@ -22,9 +22,7 @@ func main() {
 	defer core.CloseDBMain()
 
 	// initiate RPC path and handler
-	serviceHandler := handler.NewRoleHandler(handler.RoleServiceHandler{
-		Repo: repository.NewRoleRepository(core.DBMain),
-	})
+	serviceHandler := handler.NewRoleHandler(repository.NewRoleRepository(core.DBMain))
 	path, handler := rolev1connect.NewRoleServiceHandler(
 		serviceHandler,
 		core.NewInterceotors(),

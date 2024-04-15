@@ -27,9 +27,9 @@ type RoleServiceHandler struct {
 	Repo repository.RoleRepository
 }
 
-func NewRoleHandler(s RoleServiceHandler) *RoleServiceHandler {
+func NewRoleHandler(repo repository.RoleRepository) *RoleServiceHandler {
 	return &RoleServiceHandler{
-		Repo: s.Repo,
+		Repo: repo,
 	}
 }
 
