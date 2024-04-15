@@ -18,7 +18,7 @@ message User {
     string name = 4;
     string hashed_password = 5;
     role.v1.Role role = 6 [(gorm.field).belongs_to = {}];
-    google.protobuf.Timestamp crated_at = 7;
+    google.protobuf.Timestamp created_at = 7;
     google.protobuf.Timestamp updated_at = 8;
     google.protobuf.Timestamp deleted_at = 9;
 }

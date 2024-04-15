@@ -14,7 +14,7 @@ import (
 )
 
 type UserTransactionORM struct {
-	CratedAt          *time.Time
+	CreatedAt         *time.Time
 	DeletedAt         *time.Time
 	Id                uint64 `gorm:"primaryKey;not null"`
 	TransactionDate   *time.Time
@@ -52,9 +52,9 @@ func (m *UserTransaction) ToORM(ctx context.Context) (UserTransactionORM, error)
 		t := m.TransactionDate.AsTime()
 		to.TransactionDate = &t
 	}
-	if m.CratedAt != nil {
-		t := m.CratedAt.AsTime()
-		to.CratedAt = &t
+	if m.CreatedAt != nil {
+		t := m.CreatedAt.AsTime()
+		to.CreatedAt = &t
 	}
 	if m.UpdatedAt != nil {
 		t := m.UpdatedAt.AsTime()
@@ -92,8 +92,8 @@ func (m *UserTransactionORM) ToPB(ctx context.Context) (UserTransaction, error) 
 	if m.TransactionDate != nil {
 		to.TransactionDate = timestamppb.New(*m.TransactionDate)
 	}
-	if m.CratedAt != nil {
-		to.CratedAt = timestamppb.New(*m.CratedAt)
+	if m.CreatedAt != nil {
+		to.CreatedAt = timestamppb.New(*m.CreatedAt)
 	}
 	if m.UpdatedAt != nil {
 		to.UpdatedAt = timestamppb.New(*m.UpdatedAt)
@@ -408,7 +408,7 @@ func DefaultApplyFieldMaskUserTransaction(ctx context.Context, patchee *UserTran
 	var err error
 	var updatedUser bool
 	var updatedTransactionDate bool
-	var updatedCratedAt bool
+	var updatedCreatedAt bool
 	var updatedUpdatedAt bool
 	var updatedDeletedAt bool
 	for i, f := range updateMask.Paths {
@@ -464,27 +464,27 @@ func DefaultApplyFieldMaskUserTransaction(ctx context.Context, patchee *UserTran
 			patchee.TransactionDate = patcher.TransactionDate
 			continue
 		}
-		if !updatedCratedAt && strings.HasPrefix(f, prefix+"CratedAt.") {
-			if patcher.CratedAt == nil {
-				patchee.CratedAt = nil
+		if !updatedCreatedAt && strings.HasPrefix(f, prefix+"CreatedAt.") {
+			if patcher.CreatedAt == nil {
+				patchee.CreatedAt = nil
 				continue
 			}
-			if patchee.CratedAt == nil {
-				patchee.CratedAt = &timestamppb.Timestamp{}
+			if patchee.CreatedAt == nil {
+				patchee.CreatedAt = &timestamppb.Timestamp{}
 			}
 			childMask := &field_mask.FieldMask{}
 			for j := i; j < len(updateMask.Paths); j++ {
-				if trimPath := strings.TrimPrefix(updateMask.Paths[j], prefix+"CratedAt."); trimPath != updateMask.Paths[j] {
+				if trimPath := strings.TrimPrefix(updateMask.Paths[j], prefix+"CreatedAt."); trimPath != updateMask.Paths[j] {
 					childMask.Paths = append(childMask.Paths, trimPath)
 				}
 			}
-			if err := gorm1.MergeWithMask(patcher.CratedAt, patchee.CratedAt, childMask); err != nil {
+			if err := gorm1.MergeWithMask(patcher.CreatedAt, patchee.CreatedAt, childMask); err != nil {
 				return nil, nil
 			}
 		}
-		if f == prefix+"CratedAt" {
-			updatedCratedAt = true
-			patchee.CratedAt = patcher.CratedAt
+		if f == prefix+"CreatedAt" {
+			updatedCreatedAt = true
+			patchee.CreatedAt = patcher.CreatedAt
 			continue
 		}
 		if !updatedUpdatedAt && strings.HasPrefix(f, prefix+"UpdatedAt.") {

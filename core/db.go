@@ -3,6 +3,7 @@ package core
 import (
 	"database/sql"
 	"os"
+	"time"
 
 	featurev1 "github.com/sandisuryadi36/sansan-dashboard/gen/feature/v1"
 	rolev1 "github.com/sandisuryadi36/sansan-dashboard/gen/role/v1"
@@ -13,16 +14,19 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	gormLog "gorm.io/gorm/logger"
 )
 
 var (
 	DBMain    *gorm.DB
 	DBMainSQL *sql.DB
+	logLevel  gormLog.LogLevel = gormLog.Silent
 )
 
 func StartDBConnection() {
 	logger.Printf("Starting Db Connections...")
 
+	logLevel = gormLog.Info
 	InitDBMain()
 
 }
@@ -30,7 +34,21 @@ func StartDBConnection() {
 func InitDBMain() {
 	logger.Printf("Main Db - Connecting")
 	var err error
-	DBMain, err = gorm.Open(postgres.Open(libs.GetEnv("DB_DSN", "")), &gorm.Config{})
+
+	gormLogger := gormLog.New(
+		logger.Logger,
+		gormLog.Config{
+			SlowThreshold:             time.Second, // Slow SQL threshold
+			LogLevel:                  logLevel,    // Log level
+			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
+			ParameterizedQueries:      false,       // Don't include params in the SQL log
+			Colorful:                  true,        // Disable color
+		},
+	)
+
+	DBMain, err = gorm.Open(postgres.Open(libs.GetEnv("DB_DSN", "")), &gorm.Config{
+		Logger: gormLogger,
+	})
 	if err != nil {
 		logger.Fatalf("Failed connect to DB main: %v", err)
 		os.Exit(1)

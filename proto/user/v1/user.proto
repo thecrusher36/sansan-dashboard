@@ -8,9 +8,10 @@ import "user/v1/user_gorm.proto";
 
 service UserService {
     rpc GetUserList(GetUserListRequest) returns (GetUserListResponse) {
-        option (google.api.http) = {
-            get: "/v1/users"
-        };
+        option (google.api.http) = {get: "/v1/users"};
+    }
+    rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+        option (google.api.http) = {get: "/v1/user/{id}"};
     }
     rpc AddUser(AddUserRequest) returns (AddUserResponse) {
         option (google.api.http) = {
@@ -18,13 +19,26 @@ service UserService {
             body: "*"
         };
     }
+    rpc EditUser(EditUserRequest) returns (EditUserResponse) {
+        option (google.api.http) = {
+            put: "/v1/user/{id}"
+            body: "*"
+        };
+    }
+    rpc RemoveUser(RemoveUserRequest) returns (RemoveUserResponse) {
+        option (google.api.http) = {
+            delete: "/v1/user/{id}"
+        };
+    }
 }
+
+
+// ========= REQUEST START ==========
 
 message GetUserListRequest {}
 
-message GetUserListResponse {
-    repeated User users = 1;
-    common.v1.StandardResponse http_status = 2;
+message GetUserRequest {
+    uint64 id = 1;
 }
 
 message AddUserRequest {
@@ -33,9 +47,49 @@ message AddUserRequest {
     string name = 3;
     string password = 4;
     string re_password = 5;
+    uint64 role_id = 6;
+}
+
+message EditUserRequest {
+    uint64 id = 1;
+    string user_name = 2;
+    string email = 3;
+    string name = 4;
+    uint64 role_id = 5;
+}
+
+message RemoveUserRequest {
+    uint64 id = 1;
+}
+
+// ========= REQUEST END ==========
+
+
+// ========= RESPONSE START ==========
+
+message GetUserListResponse {
+    repeated User users = 1;
+    common.v1.StandardResponse http_status = 2;
+}
+
+message GetUserResponse {
+    User user = 1;
+    common.v1.StandardResponse http_status = 2;
 }
 
 message AddUserResponse {
+    User user = 1;
+    common.v1.StandardResponse http_status = 2;
+}
+
+message EditUserResponse {
+    User user = 1;
+    common.v1.StandardResponse http_status = 2;
+}
+
+message RemoveUserResponse {
     string message = 1;
     common.v1.StandardResponse http_status = 2;
 }
+
+// ========= RESPONSE END ==========

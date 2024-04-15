@@ -1,4 +1,4 @@
-package rolev1
+package featurev1
 
 import (
 	context "context"
@@ -16,7 +16,7 @@ import (
 )
 
 type ServiceORM struct {
-	CratedAt           *time.Time
+	CreatedAt          *time.Time
 	DeletedAt          *time.Time
 	Id                 uint64        `gorm:"primaryKey;not null"`
 	Roles              []*v1.RoleORM `gorm:"foreignKey:Id;references:Id;many2many:service_roles;joinForeignKey:ServiceId;joinReferences:RoleId"`
@@ -54,9 +54,9 @@ func (m *Service) ToORM(ctx context.Context) (ServiceORM, error) {
 			to.Roles = append(to.Roles, nil)
 		}
 	}
-	if m.CratedAt != nil {
-		t := m.CratedAt.AsTime()
-		to.CratedAt = &t
+	if m.CreatedAt != nil {
+		t := m.CreatedAt.AsTime()
+		to.CreatedAt = &t
 	}
 	if m.UpdatedAt != nil {
 		t := m.UpdatedAt.AsTime()
@@ -96,8 +96,8 @@ func (m *ServiceORM) ToPB(ctx context.Context) (Service, error) {
 			to.Roles = append(to.Roles, nil)
 		}
 	}
-	if m.CratedAt != nil {
-		to.CratedAt = timestamppb.New(*m.CratedAt)
+	if m.CreatedAt != nil {
+		to.CreatedAt = timestamppb.New(*m.CreatedAt)
 	}
 	if m.UpdatedAt != nil {
 		to.UpdatedAt = timestamppb.New(*m.UpdatedAt)
@@ -135,7 +135,7 @@ type ServiceWithAfterToPB interface {
 }
 
 type FeatureORM struct {
-	CratedAt           *time.Time
+	CreatedAt          *time.Time
 	DeletedAt          *time.Time
 	FeatureDescription string
 	FeatureName        string
@@ -172,9 +172,9 @@ func (m *Feature) ToORM(ctx context.Context) (FeatureORM, error) {
 		to.Service = &tempService
 	}
 	to.IsDefault = m.IsDefault
-	if m.CratedAt != nil {
-		t := m.CratedAt.AsTime()
-		to.CratedAt = &t
+	if m.CreatedAt != nil {
+		t := m.CreatedAt.AsTime()
+		to.CreatedAt = &t
 	}
 	if m.UpdatedAt != nil {
 		t := m.UpdatedAt.AsTime()
@@ -211,8 +211,8 @@ func (m *FeatureORM) ToPB(ctx context.Context) (Feature, error) {
 		to.Service = &tempService
 	}
 	to.IsDefault = m.IsDefault
-	if m.CratedAt != nil {
-		to.CratedAt = timestamppb.New(*m.CratedAt)
+	if m.CreatedAt != nil {
+		to.CreatedAt = timestamppb.New(*m.CreatedAt)
 	}
 	if m.UpdatedAt != nil {
 		to.UpdatedAt = timestamppb.New(*m.UpdatedAt)
@@ -250,7 +250,7 @@ type FeatureWithAfterToPB interface {
 }
 
 type UserExtraFeatureORM struct {
-	CratedAt             *time.Time
+	CreatedAt            *time.Time
 	DeletedAt            *time.Time
 	Feature              *FeatureORM `gorm:"foreignKey:FeatureId;references:Id"`
 	FeatureId            *uint64
@@ -299,9 +299,9 @@ func (m *UserExtraFeature) ToORM(ctx context.Context) (UserExtraFeatureORM, erro
 		}
 		to.FeatureTransaction = &tempFeatureTransaction
 	}
-	if m.CratedAt != nil {
-		t := m.CratedAt.AsTime()
-		to.CratedAt = &t
+	if m.CreatedAt != nil {
+		t := m.CreatedAt.AsTime()
+		to.CreatedAt = &t
 	}
 	if m.UpdatedAt != nil {
 		t := m.UpdatedAt.AsTime()
@@ -349,8 +349,8 @@ func (m *UserExtraFeatureORM) ToPB(ctx context.Context) (UserExtraFeature, error
 		}
 		to.FeatureTransaction = &tempFeatureTransaction
 	}
-	if m.CratedAt != nil {
-		to.CratedAt = timestamppb.New(*m.CratedAt)
+	if m.CreatedAt != nil {
+		to.CreatedAt = timestamppb.New(*m.CreatedAt)
 	}
 	if m.UpdatedAt != nil {
 		to.UpdatedAt = timestamppb.New(*m.UpdatedAt)
@@ -388,7 +388,7 @@ type UserExtraFeatureWithAfterToPB interface {
 }
 
 type FeatureTransactionORM struct {
-	CratedAt          *time.Time
+	CreatedAt         *time.Time
 	DeletedAt         *time.Time
 	ExpiredDate       *time.Time
 	Feature           *FeatureORM `gorm:"foreignKey:FeatureId;references:Id"`
@@ -433,9 +433,9 @@ func (m *FeatureTransaction) ToORM(ctx context.Context) (FeatureTransactionORM, 
 		t := m.ExpiredDate.AsTime()
 		to.ExpiredDate = &t
 	}
-	if m.CratedAt != nil {
-		t := m.CratedAt.AsTime()
-		to.CratedAt = &t
+	if m.CreatedAt != nil {
+		t := m.CreatedAt.AsTime()
+		to.CreatedAt = &t
 	}
 	if m.UpdatedAt != nil {
 		t := m.UpdatedAt.AsTime()
@@ -479,8 +479,8 @@ func (m *FeatureTransactionORM) ToPB(ctx context.Context) (FeatureTransaction, e
 	if m.ExpiredDate != nil {
 		to.ExpiredDate = timestamppb.New(*m.ExpiredDate)
 	}
-	if m.CratedAt != nil {
-		to.CratedAt = timestamppb.New(*m.CratedAt)
+	if m.CreatedAt != nil {
+		to.CreatedAt = timestamppb.New(*m.CreatedAt)
 	}
 	if m.UpdatedAt != nil {
 		to.UpdatedAt = timestamppb.New(*m.UpdatedAt)
@@ -797,7 +797,7 @@ func DefaultApplyFieldMaskService(ctx context.Context, patchee *Service, patcher
 		return nil, errors.NilArgumentError
 	}
 	var err error
-	var updatedCratedAt bool
+	var updatedCreatedAt bool
 	var updatedUpdatedAt bool
 	var updatedDeletedAt bool
 	for i, f := range updateMask.Paths {
@@ -817,27 +817,27 @@ func DefaultApplyFieldMaskService(ctx context.Context, patchee *Service, patcher
 			patchee.Roles = patcher.Roles
 			continue
 		}
-		if !updatedCratedAt && strings.HasPrefix(f, prefix+"CratedAt.") {
-			if patcher.CratedAt == nil {
-				patchee.CratedAt = nil
+		if !updatedCreatedAt && strings.HasPrefix(f, prefix+"CreatedAt.") {
+			if patcher.CreatedAt == nil {
+				patchee.CreatedAt = nil
 				continue
 			}
-			if patchee.CratedAt == nil {
-				patchee.CratedAt = &timestamppb.Timestamp{}
+			if patchee.CreatedAt == nil {
+				patchee.CreatedAt = &timestamppb.Timestamp{}
 			}
 			childMask := &field_mask.FieldMask{}
 			for j := i; j < len(updateMask.Paths); j++ {
-				if trimPath := strings.TrimPrefix(updateMask.Paths[j], prefix+"CratedAt."); trimPath != updateMask.Paths[j] {
+				if trimPath := strings.TrimPrefix(updateMask.Paths[j], prefix+"CreatedAt."); trimPath != updateMask.Paths[j] {
 					childMask.Paths = append(childMask.Paths, trimPath)
 				}
 			}
-			if err := gorm1.MergeWithMask(patcher.CratedAt, patchee.CratedAt, childMask); err != nil {
+			if err := gorm1.MergeWithMask(patcher.CreatedAt, patchee.CreatedAt, childMask); err != nil {
 				return nil, nil
 			}
 		}
-		if f == prefix+"CratedAt" {
-			updatedCratedAt = true
-			patchee.CratedAt = patcher.CratedAt
+		if f == prefix+"CreatedAt" {
+			updatedCreatedAt = true
+			patchee.CreatedAt = patcher.CreatedAt
 			continue
 		}
 		if !updatedUpdatedAt && strings.HasPrefix(f, prefix+"UpdatedAt.") {
@@ -1219,7 +1219,7 @@ func DefaultApplyFieldMaskFeature(ctx context.Context, patchee *Feature, patcher
 	}
 	var err error
 	var updatedService bool
-	var updatedCratedAt bool
+	var updatedCreatedAt bool
 	var updatedUpdatedAt bool
 	var updatedDeletedAt bool
 	for i, f := range updateMask.Paths {
@@ -1260,27 +1260,27 @@ func DefaultApplyFieldMaskFeature(ctx context.Context, patchee *Feature, patcher
 			patchee.IsDefault = patcher.IsDefault
 			continue
 		}
-		if !updatedCratedAt && strings.HasPrefix(f, prefix+"CratedAt.") {
-			if patcher.CratedAt == nil {
-				patchee.CratedAt = nil
+		if !updatedCreatedAt && strings.HasPrefix(f, prefix+"CreatedAt.") {
+			if patcher.CreatedAt == nil {
+				patchee.CreatedAt = nil
 				continue
 			}
-			if patchee.CratedAt == nil {
-				patchee.CratedAt = &timestamppb.Timestamp{}
+			if patchee.CreatedAt == nil {
+				patchee.CreatedAt = &timestamppb.Timestamp{}
 			}
 			childMask := &field_mask.FieldMask{}
 			for j := i; j < len(updateMask.Paths); j++ {
-				if trimPath := strings.TrimPrefix(updateMask.Paths[j], prefix+"CratedAt."); trimPath != updateMask.Paths[j] {
+				if trimPath := strings.TrimPrefix(updateMask.Paths[j], prefix+"CreatedAt."); trimPath != updateMask.Paths[j] {
 					childMask.Paths = append(childMask.Paths, trimPath)
 				}
 			}
-			if err := gorm1.MergeWithMask(patcher.CratedAt, patchee.CratedAt, childMask); err != nil {
+			if err := gorm1.MergeWithMask(patcher.CreatedAt, patchee.CreatedAt, childMask); err != nil {
 				return nil, nil
 			}
 		}
-		if f == prefix+"CratedAt" {
-			updatedCratedAt = true
-			patchee.CratedAt = patcher.CratedAt
+		if f == prefix+"CreatedAt" {
+			updatedCreatedAt = true
+			patchee.CreatedAt = patcher.CreatedAt
 			continue
 		}
 		if !updatedUpdatedAt && strings.HasPrefix(f, prefix+"UpdatedAt.") {
@@ -1664,7 +1664,7 @@ func DefaultApplyFieldMaskUserExtraFeature(ctx context.Context, patchee *UserExt
 	var updatedUser bool
 	var updatedFeature bool
 	var updatedFeatureTransaction bool
-	var updatedCratedAt bool
+	var updatedCreatedAt bool
 	var updatedUpdatedAt bool
 	var updatedDeletedAt bool
 	for i, f := range updateMask.Paths {
@@ -1735,27 +1735,27 @@ func DefaultApplyFieldMaskUserExtraFeature(ctx context.Context, patchee *UserExt
 			patchee.FeatureTransaction = patcher.FeatureTransaction
 			continue
 		}
-		if !updatedCratedAt && strings.HasPrefix(f, prefix+"CratedAt.") {
-			if patcher.CratedAt == nil {
-				patchee.CratedAt = nil
+		if !updatedCreatedAt && strings.HasPrefix(f, prefix+"CreatedAt.") {
+			if patcher.CreatedAt == nil {
+				patchee.CreatedAt = nil
 				continue
 			}
-			if patchee.CratedAt == nil {
-				patchee.CratedAt = &timestamppb.Timestamp{}
+			if patchee.CreatedAt == nil {
+				patchee.CreatedAt = &timestamppb.Timestamp{}
 			}
 			childMask := &field_mask.FieldMask{}
 			for j := i; j < len(updateMask.Paths); j++ {
-				if trimPath := strings.TrimPrefix(updateMask.Paths[j], prefix+"CratedAt."); trimPath != updateMask.Paths[j] {
+				if trimPath := strings.TrimPrefix(updateMask.Paths[j], prefix+"CreatedAt."); trimPath != updateMask.Paths[j] {
 					childMask.Paths = append(childMask.Paths, trimPath)
 				}
 			}
-			if err := gorm1.MergeWithMask(patcher.CratedAt, patchee.CratedAt, childMask); err != nil {
+			if err := gorm1.MergeWithMask(patcher.CreatedAt, patchee.CreatedAt, childMask); err != nil {
 				return nil, nil
 			}
 		}
-		if f == prefix+"CratedAt" {
-			updatedCratedAt = true
-			patchee.CratedAt = patcher.CratedAt
+		if f == prefix+"CreatedAt" {
+			updatedCreatedAt = true
+			patchee.CreatedAt = patcher.CreatedAt
 			continue
 		}
 		if !updatedUpdatedAt && strings.HasPrefix(f, prefix+"UpdatedAt.") {
@@ -2139,7 +2139,7 @@ func DefaultApplyFieldMaskFeatureTransaction(ctx context.Context, patchee *Featu
 	var updatedUserTransaction bool
 	var updatedFeature bool
 	var updatedExpiredDate bool
-	var updatedCratedAt bool
+	var updatedCreatedAt bool
 	var updatedUpdatedAt bool
 	var updatedDeletedAt bool
 	for i, f := range updateMask.Paths {
@@ -2212,27 +2212,27 @@ func DefaultApplyFieldMaskFeatureTransaction(ctx context.Context, patchee *Featu
 			patchee.ExpiredDate = patcher.ExpiredDate
 			continue
 		}
-		if !updatedCratedAt && strings.HasPrefix(f, prefix+"CratedAt.") {
-			if patcher.CratedAt == nil {
-				patchee.CratedAt = nil
+		if !updatedCreatedAt && strings.HasPrefix(f, prefix+"CreatedAt.") {
+			if patcher.CreatedAt == nil {
+				patchee.CreatedAt = nil
 				continue
 			}
-			if patchee.CratedAt == nil {
-				patchee.CratedAt = &timestamppb.Timestamp{}
+			if patchee.CreatedAt == nil {
+				patchee.CreatedAt = &timestamppb.Timestamp{}
 			}
 			childMask := &field_mask.FieldMask{}
 			for j := i; j < len(updateMask.Paths); j++ {
-				if trimPath := strings.TrimPrefix(updateMask.Paths[j], prefix+"CratedAt."); trimPath != updateMask.Paths[j] {
+				if trimPath := strings.TrimPrefix(updateMask.Paths[j], prefix+"CreatedAt."); trimPath != updateMask.Paths[j] {
 					childMask.Paths = append(childMask.Paths, trimPath)
 				}
 			}
-			if err := gorm1.MergeWithMask(patcher.CratedAt, patchee.CratedAt, childMask); err != nil {
+			if err := gorm1.MergeWithMask(patcher.CreatedAt, patchee.CreatedAt, childMask); err != nil {
 				return nil, nil
 			}
 		}
-		if f == prefix+"CratedAt" {
-			updatedCratedAt = true
-			patchee.CratedAt = patcher.CratedAt
+		if f == prefix+"CreatedAt" {
+			updatedCreatedAt = true
+			patchee.CreatedAt = patcher.CreatedAt
 			continue
 		}
 		if !updatedUpdatedAt && strings.HasPrefix(f, prefix+"UpdatedAt.") {

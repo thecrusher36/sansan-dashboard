@@ -20,13 +20,11 @@ func main() {
 	defer core.CloseDBMain()
 
 	// initiate RPC path and handler
-	serviceHandler := handler.NewHandler(
-		&handler.UserServiceHandler{
-			Repo: *repository.NewUserRepository(core.DBMain),
-		},
-	)
+	serviceHandler := handler.NewUserHandler(handler.UserServiceHandler{
+		Repo: repository.NewUserRepository(core.DBMain),
+	})
 	path, handler := userv1connect.NewUserServiceHandler(
-		serviceHandler.ServiceHandler.(*handler.UserServiceHandler),
+		serviceHandler,
 		core.NewInterceotors(),
 	)
 

@@ -10,11 +10,79 @@ service RoleService {
     rpc GetRoleList(GetRoleListRequest) returns (GetRoleListResponse) {
         option (google.api.http) = {get: "/v1/roles"};
     }
+    rpc GetRole(GetRoleRequest) returns (GetRoleResponse) {
+        option (google.api.http) = {get: "/v1/role/{id}"};
+    }
+    rpc AddRole(AddRoleRequest) returns (AddRoleResponse) {
+        option (google.api.http) = {
+            post: "/v1/role"
+            body: "*"
+        };
+    }
+    rpc EditRole(EditRoleRequest) returns (EditRoleResponse) {
+        option (google.api.http) = {
+            put: "/v1/role/{id}"
+            body: "*"
+        };
+    }
+    rpc RemoveRole(RemoveRoleRequest) returns (RemoveRoleResponse) {
+        option (google.api.http) = {
+            delete: "/v1/role/{id}"
+        };
+    }
 }
 
+// ========= REQUEST START ==========
+
 message GetRoleListRequest {}
+
+message GetRoleRequest {
+    uint64 id = 1;
+}
+
+message AddRoleRequest {
+    string name = 1;
+    string description = 2;
+}
+
+message EditRoleRequest {
+    uint64 id = 1;
+    string name = 2;
+    string description = 3;
+}
+
+message RemoveRoleRequest {
+    uint64 id = 1;
+}
+
+// ========= REQUEST END ==========
+
+
+// ========= RESPONESE START ==========
 
 message GetRoleListResponse {
     repeated Role roles = 1;
     common.v1.StandardResponse http_status = 2;
 }
+
+message GetRoleResponse {
+    Role role = 1;
+    common.v1.StandardResponse http_status = 2;
+}
+
+message AddRoleResponse {
+    Role role = 1;
+    common.v1.StandardResponse http_status = 2;
+}
+
+message EditRoleResponse {
+    Role role = 1;
+    common.v1.StandardResponse http_status = 2;
+}
+
+message RemoveRoleResponse {
+    string message = 1;
+    common.v1.StandardResponse http_status = 2;
+}
+
+// ========= RESPONESE END ==========

@@ -22,10 +22,13 @@ func CustomHTTPError(ctx context.Context, _ *runtime.ServeMux, marshaler runtime
 		errMessage = "internal server error"
 	}
 
-	body := &commonv1.StandardResponse{
-		Message:      "error",
-		Code:         uint64(errorCode),
-		ErrorMessage: errMessage,
+	body := &commonv1.ErrorResponse{
+		Message: errMessage,
+		HttpStatus: &commonv1.StandardResponse{
+			Status:      "error",
+			Code:         uint64(errorCode),
+			ErrorMessage: status.Code(err).String(),
+		},
 	}
 
 	jErr := json.NewEncoder(w).Encode(body)

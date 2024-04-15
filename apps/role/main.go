@@ -6,6 +6,7 @@ import (
 	"github.com/sandisuryadi36/sansan-dashboard/gen/role/v1/rolev1connect"
 	"github.com/sandisuryadi36/sansan-dashboard/handler"
 	"github.com/sandisuryadi36/sansan-dashboard/repository"
+	"gorm.io/gorm/logger"
 )
 
 func main() {
@@ -17,16 +18,15 @@ func main() {
 
 	// start DB connection
 	core.StartDBConnection()
+	core.DBMain.Config.Logger.LogMode(logger.Info)
 	defer core.CloseDBMain()
 
 	// initiate RPC path and handler
-	serviceHandler := handler.NewHandler(
-		&handler.RoleServiceHandler{
-			Repo: *repository.NewRoleRepository(core.DBMain),
-		},
-	)
+	serviceHandler := handler.NewRoleHandler(handler.RoleServiceHandler{
+		Repo: repository.NewRoleRepository(core.DBMain),
+	})
 	path, handler := rolev1connect.NewRoleServiceHandler(
-		serviceHandler.ServiceHandler.(*handler.RoleServiceHandler),
+		serviceHandler,
 		core.NewInterceotors(),
 	)
 

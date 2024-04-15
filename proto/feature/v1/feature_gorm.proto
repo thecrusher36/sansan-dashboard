@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package role.v1;
+package feature.v1;
 
 import "google/protobuf/timestamp.proto";
 import "protoc-gen-gorm/options/gorm.proto";
@@ -18,7 +18,7 @@ message Service {
     string service_name = 2;
     string service_description = 3;
     repeated role.v1.Role roles = 4  [(gorm.field).many_to_many = {}];
-    google.protobuf.Timestamp crated_at = 5;
+    google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp updated_at = 6;
     google.protobuf.Timestamp deleted_at = 7;
 }
@@ -34,7 +34,7 @@ message Feature {
     string feature_description = 3;
     Service service = 4 [(gorm.field).belongs_to = {}];
     bool is_default = 5;
-    google.protobuf.Timestamp crated_at = 6;
+    google.protobuf.Timestamp created_at = 6;
     google.protobuf.Timestamp updated_at = 7;
     google.protobuf.Timestamp deleted_at = 8;
 }
@@ -49,7 +49,7 @@ message UserExtraFeature {
     user.v1.User user = 2 [(gorm.field).belongs_to = {}];
     Feature feature = 3 [(gorm.field).belongs_to = {}];
     FeatureTransaction feature_transaction = 4 [(gorm.field).belongs_to = {}];
-    google.protobuf.Timestamp crated_at = 5;
+    google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp updated_at = 6;
     google.protobuf.Timestamp deleted_at = 7;
 }
@@ -64,7 +64,7 @@ message FeatureTransaction {
     transaction.v1.UserTransaction user_transaction = 2 [(gorm.field).belongs_to = {}];
     Feature feature = 3 [(gorm.field).belongs_to = {}];
     google.protobuf.Timestamp expired_date = 4;
-    google.protobuf.Timestamp crated_at = 5;
+    google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp updated_at = 6;
     google.protobuf.Timestamp deleted_at = 7;
 }

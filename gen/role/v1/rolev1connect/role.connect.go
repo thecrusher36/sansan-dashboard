@@ -35,17 +35,33 @@ const (
 const (
 	// RoleServiceGetRoleListProcedure is the fully-qualified name of the RoleService's GetRoleList RPC.
 	RoleServiceGetRoleListProcedure = "/role.v1.RoleService/GetRoleList"
+	// RoleServiceGetRoleProcedure is the fully-qualified name of the RoleService's GetRole RPC.
+	RoleServiceGetRoleProcedure = "/role.v1.RoleService/GetRole"
+	// RoleServiceAddRoleProcedure is the fully-qualified name of the RoleService's AddRole RPC.
+	RoleServiceAddRoleProcedure = "/role.v1.RoleService/AddRole"
+	// RoleServiceEditRoleProcedure is the fully-qualified name of the RoleService's EditRole RPC.
+	RoleServiceEditRoleProcedure = "/role.v1.RoleService/EditRole"
+	// RoleServiceRemoveRoleProcedure is the fully-qualified name of the RoleService's RemoveRole RPC.
+	RoleServiceRemoveRoleProcedure = "/role.v1.RoleService/RemoveRole"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
 	roleServiceServiceDescriptor           = v1.File_role_v1_role_proto.Services().ByName("RoleService")
 	roleServiceGetRoleListMethodDescriptor = roleServiceServiceDescriptor.Methods().ByName("GetRoleList")
+	roleServiceGetRoleMethodDescriptor     = roleServiceServiceDescriptor.Methods().ByName("GetRole")
+	roleServiceAddRoleMethodDescriptor     = roleServiceServiceDescriptor.Methods().ByName("AddRole")
+	roleServiceEditRoleMethodDescriptor    = roleServiceServiceDescriptor.Methods().ByName("EditRole")
+	roleServiceRemoveRoleMethodDescriptor  = roleServiceServiceDescriptor.Methods().ByName("RemoveRole")
 )
 
 // RoleServiceClient is a client for the role.v1.RoleService service.
 type RoleServiceClient interface {
 	GetRoleList(context.Context, *connect.Request[v1.GetRoleListRequest]) (*connect.Response[v1.GetRoleListResponse], error)
+	GetRole(context.Context, *connect.Request[v1.GetRoleRequest]) (*connect.Response[v1.GetRoleResponse], error)
+	AddRole(context.Context, *connect.Request[v1.AddRoleRequest]) (*connect.Response[v1.AddRoleResponse], error)
+	EditRole(context.Context, *connect.Request[v1.EditRoleRequest]) (*connect.Response[v1.EditRoleResponse], error)
+	RemoveRole(context.Context, *connect.Request[v1.RemoveRoleRequest]) (*connect.Response[v1.RemoveRoleResponse], error)
 }
 
 // NewRoleServiceClient constructs a client for the role.v1.RoleService service. By default, it uses
@@ -64,12 +80,40 @@ func NewRoleServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(roleServiceGetRoleListMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		getRole: connect.NewClient[v1.GetRoleRequest, v1.GetRoleResponse](
+			httpClient,
+			baseURL+RoleServiceGetRoleProcedure,
+			connect.WithSchema(roleServiceGetRoleMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		addRole: connect.NewClient[v1.AddRoleRequest, v1.AddRoleResponse](
+			httpClient,
+			baseURL+RoleServiceAddRoleProcedure,
+			connect.WithSchema(roleServiceAddRoleMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		editRole: connect.NewClient[v1.EditRoleRequest, v1.EditRoleResponse](
+			httpClient,
+			baseURL+RoleServiceEditRoleProcedure,
+			connect.WithSchema(roleServiceEditRoleMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		removeRole: connect.NewClient[v1.RemoveRoleRequest, v1.RemoveRoleResponse](
+			httpClient,
+			baseURL+RoleServiceRemoveRoleProcedure,
+			connect.WithSchema(roleServiceRemoveRoleMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // roleServiceClient implements RoleServiceClient.
 type roleServiceClient struct {
 	getRoleList *connect.Client[v1.GetRoleListRequest, v1.GetRoleListResponse]
+	getRole     *connect.Client[v1.GetRoleRequest, v1.GetRoleResponse]
+	addRole     *connect.Client[v1.AddRoleRequest, v1.AddRoleResponse]
+	editRole    *connect.Client[v1.EditRoleRequest, v1.EditRoleResponse]
+	removeRole  *connect.Client[v1.RemoveRoleRequest, v1.RemoveRoleResponse]
 }
 
 // GetRoleList calls role.v1.RoleService.GetRoleList.
@@ -77,9 +121,33 @@ func (c *roleServiceClient) GetRoleList(ctx context.Context, req *connect.Reques
 	return c.getRoleList.CallUnary(ctx, req)
 }
 
+// GetRole calls role.v1.RoleService.GetRole.
+func (c *roleServiceClient) GetRole(ctx context.Context, req *connect.Request[v1.GetRoleRequest]) (*connect.Response[v1.GetRoleResponse], error) {
+	return c.getRole.CallUnary(ctx, req)
+}
+
+// AddRole calls role.v1.RoleService.AddRole.
+func (c *roleServiceClient) AddRole(ctx context.Context, req *connect.Request[v1.AddRoleRequest]) (*connect.Response[v1.AddRoleResponse], error) {
+	return c.addRole.CallUnary(ctx, req)
+}
+
+// EditRole calls role.v1.RoleService.EditRole.
+func (c *roleServiceClient) EditRole(ctx context.Context, req *connect.Request[v1.EditRoleRequest]) (*connect.Response[v1.EditRoleResponse], error) {
+	return c.editRole.CallUnary(ctx, req)
+}
+
+// RemoveRole calls role.v1.RoleService.RemoveRole.
+func (c *roleServiceClient) RemoveRole(ctx context.Context, req *connect.Request[v1.RemoveRoleRequest]) (*connect.Response[v1.RemoveRoleResponse], error) {
+	return c.removeRole.CallUnary(ctx, req)
+}
+
 // RoleServiceHandler is an implementation of the role.v1.RoleService service.
 type RoleServiceHandler interface {
 	GetRoleList(context.Context, *connect.Request[v1.GetRoleListRequest]) (*connect.Response[v1.GetRoleListResponse], error)
+	GetRole(context.Context, *connect.Request[v1.GetRoleRequest]) (*connect.Response[v1.GetRoleResponse], error)
+	AddRole(context.Context, *connect.Request[v1.AddRoleRequest]) (*connect.Response[v1.AddRoleResponse], error)
+	EditRole(context.Context, *connect.Request[v1.EditRoleRequest]) (*connect.Response[v1.EditRoleResponse], error)
+	RemoveRole(context.Context, *connect.Request[v1.RemoveRoleRequest]) (*connect.Response[v1.RemoveRoleResponse], error)
 }
 
 // NewRoleServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -94,10 +162,42 @@ func NewRoleServiceHandler(svc RoleServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(roleServiceGetRoleListMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	roleServiceGetRoleHandler := connect.NewUnaryHandler(
+		RoleServiceGetRoleProcedure,
+		svc.GetRole,
+		connect.WithSchema(roleServiceGetRoleMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	roleServiceAddRoleHandler := connect.NewUnaryHandler(
+		RoleServiceAddRoleProcedure,
+		svc.AddRole,
+		connect.WithSchema(roleServiceAddRoleMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	roleServiceEditRoleHandler := connect.NewUnaryHandler(
+		RoleServiceEditRoleProcedure,
+		svc.EditRole,
+		connect.WithSchema(roleServiceEditRoleMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	roleServiceRemoveRoleHandler := connect.NewUnaryHandler(
+		RoleServiceRemoveRoleProcedure,
+		svc.RemoveRole,
+		connect.WithSchema(roleServiceRemoveRoleMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/role.v1.RoleService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case RoleServiceGetRoleListProcedure:
 			roleServiceGetRoleListHandler.ServeHTTP(w, r)
+		case RoleServiceGetRoleProcedure:
+			roleServiceGetRoleHandler.ServeHTTP(w, r)
+		case RoleServiceAddRoleProcedure:
+			roleServiceAddRoleHandler.ServeHTTP(w, r)
+		case RoleServiceEditRoleProcedure:
+			roleServiceEditRoleHandler.ServeHTTP(w, r)
+		case RoleServiceRemoveRoleProcedure:
+			roleServiceRemoveRoleHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -109,4 +209,20 @@ type UnimplementedRoleServiceHandler struct{}
 
 func (UnimplementedRoleServiceHandler) GetRoleList(context.Context, *connect.Request[v1.GetRoleListRequest]) (*connect.Response[v1.GetRoleListResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("role.v1.RoleService.GetRoleList is not implemented"))
+}
+
+func (UnimplementedRoleServiceHandler) GetRole(context.Context, *connect.Request[v1.GetRoleRequest]) (*connect.Response[v1.GetRoleResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("role.v1.RoleService.GetRole is not implemented"))
+}
+
+func (UnimplementedRoleServiceHandler) AddRole(context.Context, *connect.Request[v1.AddRoleRequest]) (*connect.Response[v1.AddRoleResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("role.v1.RoleService.AddRole is not implemented"))
+}
+
+func (UnimplementedRoleServiceHandler) EditRole(context.Context, *connect.Request[v1.EditRoleRequest]) (*connect.Response[v1.EditRoleResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("role.v1.RoleService.EditRole is not implemented"))
+}
+
+func (UnimplementedRoleServiceHandler) RemoveRole(context.Context, *connect.Request[v1.RemoveRoleRequest]) (*connect.Response[v1.RemoveRoleResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("role.v1.RoleService.RemoveRole is not implemented"))
 }
