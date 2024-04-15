@@ -15,3 +15,7 @@ run-user:
 
 test-repo:
 	cd repository/; go test -v
+
+mock-gen:
+	mockgen -source=repository/role.go -destination=repository/mock/role_mock.go -package=mock;
+	mockgen -source=repository/user.go -destination=repository/mock/user_mock.go -package=mock;

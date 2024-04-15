@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	v1 "github.com/sandisuryadi36/sansan-dashboard/gen/user/v1"
+	userv1 "github.com/sandisuryadi36/sansan-dashboard/gen/user/v1"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,10 +41,10 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 }
 
 // AddUser mocks base method.
-func (m *MockUserRepository) AddUser(arg0 context.Context, arg1 *v1.User) (*v1.User, error) {
+func (m *MockUserRepository) AddUser(arg0 context.Context, arg1 *userv1.User) (*userv1.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddUser", arg0, arg1)
-	ret0, _ := ret[0].(*v1.User)
+	ret0, _ := ret[0].(*userv1.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -56,10 +56,10 @@ func (mr *MockUserRepositoryMockRecorder) AddUser(arg0, arg1 any) *gomock.Call {
 }
 
 // EditUser mocks base method.
-func (m *MockUserRepository) EditUser(arg0 context.Context, arg1 *v1.User) (*v1.User, error) {
+func (m *MockUserRepository) EditUser(arg0 context.Context, arg1 *userv1.User) (*userv1.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EditUser", arg0, arg1)
-	ret0, _ := ret[0].(*v1.User)
+	ret0, _ := ret[0].(*userv1.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -71,10 +71,10 @@ func (mr *MockUserRepositoryMockRecorder) EditUser(arg0, arg1 any) *gomock.Call 
 }
 
 // GetUser mocks base method.
-func (m *MockUserRepository) GetUser(arg0 context.Context, arg1 *v1.User) (*v1.User, error) {
+func (m *MockUserRepository) GetUser(arg0 context.Context, arg1 *userv1.User) (*userv1.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUser", arg0, arg1)
-	ret0, _ := ret[0].(*v1.User)
+	ret0, _ := ret[0].(*userv1.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -86,10 +86,10 @@ func (mr *MockUserRepositoryMockRecorder) GetUser(arg0, arg1 any) *gomock.Call {
 }
 
 // GetUserList mocks base method.
-func (m *MockUserRepository) GetUserList(arg0 context.Context, arg1 *v1.User) ([]*v1.User, error) {
+func (m *MockUserRepository) GetUserList(arg0 context.Context, arg1 *userv1.User) ([]*userv1.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserList", arg0, arg1)
-	ret0, _ := ret[0].([]*v1.User)
+	ret0, _ := ret[0].([]*userv1.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -101,10 +101,10 @@ func (mr *MockUserRepositoryMockRecorder) GetUserList(arg0, arg1 any) *gomock.Ca
 }
 
 // RemoveUser mocks base method.
-func (m *MockUserRepository) RemoveUser(arg0 context.Context, arg1 *v1.User) (*v1.User, error) {
+func (m *MockUserRepository) RemoveUser(arg0 context.Context, arg1 *userv1.User) (*userv1.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RemoveUser", arg0, arg1)
-	ret0, _ := ret[0].(*v1.User)
+	ret0, _ := ret[0].(*userv1.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
