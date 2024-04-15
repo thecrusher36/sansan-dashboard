@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/sandisuryadi36/sansan-dashboard/core"
+	"github.com/sandisuryadi36/sansan-dashboard/core/caller"
 	rolev1 "github.com/sandisuryadi36/sansan-dashboard/gen/role/v1"
 	"github.com/sandisuryadi36/sansan-dashboard/gen/role/v1/rolev1connect"
 	"github.com/sandisuryadi36/sansan-dashboard/handler"
@@ -22,7 +23,10 @@ func main() {
 	defer core.CloseDBMain()
 
 	// initiate RPC path and handler
-	serviceHandler := handler.NewRoleHandler(repository.NewRoleRepository(core.DBMain))
+	serviceHandler := handler.NewRoleHandler(
+		repository.NewRoleRepository(core.DBMain),
+		caller.New(),
+	)
 	path, handler := rolev1connect.NewRoleServiceHandler(
 		serviceHandler,
 		core.NewInterceotors(),

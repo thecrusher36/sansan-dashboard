@@ -17,17 +17,17 @@ type RoleRepository interface {
 	RemoveRole(context.Context, *rolev1.Role) (*rolev1.Role, error)
 }
 
-type GormRoleRepo struct {
+type gormRoleRepo struct {
 	db *gorm.DB
 }
 
-func NewRoleRepository(dbMain *gorm.DB) *GormRoleRepo {
-	return &GormRoleRepo{
+func NewRoleRepository(dbMain *gorm.DB) *gormRoleRepo {
+	return &gormRoleRepo{
 		db: dbMain,
 	}
 }
 
-func (repo *GormRoleRepo) GetRoleList(ctx context.Context, req *rolev1.Role) (res []*rolev1.Role, err error) {
+func (repo *gormRoleRepo) GetRoleList(ctx context.Context, req *rolev1.Role) (res []*rolev1.Role, err error) {
 	query := repo.db.Model(&rolev1.RoleORM{}).
 		Where("deleted_at IS NULL").
 		Order("created_at DESC")
@@ -59,7 +59,7 @@ func (repo *GormRoleRepo) GetRoleList(ctx context.Context, req *rolev1.Role) (re
 	return
 }
 
-func (repo *GormRoleRepo) GetRole(ctx context.Context, req *rolev1.Role) (res *rolev1.Role, err error) {
+func (repo *gormRoleRepo) GetRole(ctx context.Context, req *rolev1.Role) (res *rolev1.Role, err error) {
 	roleORM := &rolev1.RoleORM{}
 	if req != nil {
 		reqORM, err := req.ToORM(ctx)
@@ -85,7 +85,7 @@ func (repo *GormRoleRepo) GetRole(ctx context.Context, req *rolev1.Role) (res *r
 	return &rolePB, err
 }
 
-func (repo *GormRoleRepo) AddRole(ctx context.Context, req *rolev1.Role) (*rolev1.Role, error) {
+func (repo *gormRoleRepo) AddRole(ctx context.Context, req *rolev1.Role) (*rolev1.Role, error) {
 	roleORM := &rolev1.RoleORM{}
 	if req != nil {
 		reqORM, err := req.ToORM(ctx)
@@ -111,7 +111,7 @@ func (repo *GormRoleRepo) AddRole(ctx context.Context, req *rolev1.Role) (*rolev
 	return &resPB, nil
 }
 
-func (repo *GormRoleRepo) EditRole(ctx context.Context, req *rolev1.Role) (*rolev1.Role, error) {
+func (repo *gormRoleRepo) EditRole(ctx context.Context, req *rolev1.Role) (*rolev1.Role, error) {
 	roleORM := &rolev1.RoleORM{}
 	if req != nil {
 		reqORM, err := req.ToORM(ctx)
@@ -137,7 +137,7 @@ func (repo *GormRoleRepo) EditRole(ctx context.Context, req *rolev1.Role) (*role
 	return &resPB, nil
 }
 
-func (repo *GormRoleRepo) RemoveRole(ctx context.Context, req *rolev1.Role) (*rolev1.Role, error) {
+func (repo *gormRoleRepo) RemoveRole(ctx context.Context, req *rolev1.Role) (*rolev1.Role, error) {
 	roleORM := &rolev1.RoleORM{}
 	if req != nil {
 		reqORM, err := req.ToORM(ctx)

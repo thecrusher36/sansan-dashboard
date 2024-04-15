@@ -19,3 +19,4 @@ test-repo:
 mock-gen:
 	mockgen -source=repository/role.go -destination=repository/mock/role_mock.go -package=mock;
 	mockgen -source=repository/user.go -destination=repository/mock/user_mock.go -package=mock;
+	mockgen -source=core/caller/caller.go -destination=core/caller/caller_mock.go -package=caller;

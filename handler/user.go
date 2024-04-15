@@ -25,18 +25,20 @@ type UserHandler interface {
 	RemoveUser(context.Context, *connect.Request[userv1.RemoveUserRequest]) (*connect.Response[userv1.RemoveUserResponse], error)
 }
 
-type UserServiceHandler struct {
+type userServiceHandler struct {
 	userv1connect.UnimplementedUserServiceHandler
-	Repo repository.UserRepository
+	Repo          repository.UserRepository
+	ServiceCaller caller.ServiceCaller
 }
 
-func NewUserHandler(repo repository.UserRepository) *UserServiceHandler {
-	return &UserServiceHandler{
+func NewUserHandler(repo repository.UserRepository, sc caller.ServiceCaller) *userServiceHandler {
+	return &userServiceHandler{
 		Repo: repo,
+		ServiceCaller: sc,
 	}
 }
 
-func (h *UserServiceHandler) GetUserList(ctx context.Context, req *connect.Request[userv1.GetUserListRequest]) (res *connect.Response[userv1.GetUserListResponse], err error) {
+func (h *userServiceHandler) GetUserList(ctx context.Context, req *connect.Request[userv1.GetUserListRequest]) (res *connect.Response[userv1.GetUserListResponse], err error) {
 	users, err := h.Repo.GetUserList(ctx, &userv1.User{})
 	if err != nil {
 		return
@@ -53,7 +55,7 @@ func (h *UserServiceHandler) GetUserList(ctx context.Context, req *connect.Reque
 	return
 }
 
-func (h *UserServiceHandler) GetUser(ctx context.Context, req *connect.Request[userv1.GetUserRequest]) (res *connect.Response[userv1.GetUserResponse], err error) {
+func (h *userServiceHandler) GetUser(ctx context.Context, req *connect.Request[userv1.GetUserRequest]) (res *connect.Response[userv1.GetUserResponse], err error) {
 	payload := req.Msg
 	user, err := h.Repo.GetUser(ctx, &userv1.User{
 		Id: payload.Id,
@@ -73,7 +75,7 @@ func (h *UserServiceHandler) GetUser(ctx context.Context, req *connect.Request[u
 	return
 }
 
-func (h *UserServiceHandler) AddUser(ctx context.Context, req *connect.Request[userv1.AddUserRequest]) (res *connect.Response[userv1.AddUserResponse], err error) {
+func (h *userServiceHandler) AddUser(ctx context.Context, req *connect.Request[userv1.AddUserRequest]) (res *connect.Response[userv1.AddUserResponse], err error) {
 	payload := req.Msg
 	hashedPass, err := auth.HashPassword(payload.Password)
 	if err != nil {
@@ -86,7 +88,7 @@ func (h *UserServiceHandler) AddUser(ctx context.Context, req *connect.Request[u
 	}
 
 	// check role
-	role, err := caller.RoleClient.GetRole(ctx, &connect.Request[rolev1.GetRoleRequest]{
+	role, err := h.ServiceCaller.Role().GetRole(ctx, &connect.Request[rolev1.GetRoleRequest]{
 		Msg: &rolev1.GetRoleRequest{
 			Id: payload.RoleId,
 		},
@@ -121,7 +123,7 @@ func (h *UserServiceHandler) AddUser(ctx context.Context, req *connect.Request[u
 	return
 }
 
-func (h *UserServiceHandler) EditUser(ctx context.Context, req *connect.Request[userv1.EditUserRequest]) (res *connect.Response[userv1.EditUserResponse], err error) {
+func (h *userServiceHandler) EditUser(ctx context.Context, req *connect.Request[userv1.EditUserRequest]) (res *connect.Response[userv1.EditUserResponse], err error) {
 	payload := req.Msg
 	user, err := h.Repo.GetUser(ctx, &userv1.User{
 		Id: payload.Id,
@@ -136,7 +138,7 @@ func (h *UserServiceHandler) EditUser(ctx context.Context, req *connect.Request[
 	}
 
 	// check role
-	role, err := caller.RoleClient.GetRole(ctx, &connect.Request[rolev1.GetRoleRequest]{
+	role, err := h.ServiceCaller.Role().GetRole(ctx, &connect.Request[rolev1.GetRoleRequest]{
 		Msg: &rolev1.GetRoleRequest{
 			Id: payload.RoleId,
 		},
@@ -172,7 +174,7 @@ func (h *UserServiceHandler) EditUser(ctx context.Context, req *connect.Request[
 	return
 }
 
-func (h *UserServiceHandler) RemoveUser(ctx context.Context, req *connect.Request[userv1.RemoveUserRequest]) (res *connect.Response[userv1.RemoveUserResponse], err error) {
+func (h *userServiceHandler) RemoveUser(ctx context.Context, req *connect.Request[userv1.RemoveUserRequest]) (res *connect.Response[userv1.RemoveUserResponse], err error) {
 	payload := req.Msg
 	user, err := h.Repo.GetUser(ctx, &userv1.User{
 		Id: payload.Id,
@@ -200,7 +202,7 @@ func (h *UserServiceHandler) RemoveUser(ctx context.Context, req *connect.Reques
 }
 
 // function to check userName or email allready exist
-func CheckUserNameAndEmail(ctx context.Context, h *UserServiceHandler, user *userv1.User) error {
+func CheckUserNameAndEmail(ctx context.Context, h *userServiceHandler, user *userv1.User) error {
 	// check if userName already exist
 	if _, err := h.Repo.GetUser(ctx, &userv1.User{
 		UserName: user.UserName,

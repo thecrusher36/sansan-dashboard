@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"connectrpc.com/connect"
+	"github.com/sandisuryadi36/sansan-dashboard/core/caller"
 	commonv1 "github.com/sandisuryadi36/sansan-dashboard/gen/common/v1"
 	rolev1 "github.com/sandisuryadi36/sansan-dashboard/gen/role/v1"
 	"github.com/sandisuryadi36/sansan-dashboard/gen/role/v1/rolev1connect"
@@ -22,18 +23,20 @@ type RoleHandler interface {
 	RemoveRole(context.Context, *connect.Request[rolev1.RemoveRoleRequest]) (*connect.Response[rolev1.RemoveRoleResponse], error)
 }
 
-type RoleServiceHandler struct {
+type roleServiceHandler struct {
 	rolev1connect.UnimplementedRoleServiceHandler
-	Repo repository.RoleRepository
+	Repo          repository.RoleRepository
+	ServiceCaller caller.ServiceCaller
 }
 
-func NewRoleHandler(repo repository.RoleRepository) *RoleServiceHandler {
-	return &RoleServiceHandler{
+func NewRoleHandler(repo repository.RoleRepository, sc caller.ServiceCaller) *roleServiceHandler {
+	return &roleServiceHandler{
 		Repo: repo,
+		ServiceCaller: sc,
 	}
 }
 
-func (h *RoleServiceHandler) GetRoleList(ctx context.Context, req *connect.Request[rolev1.GetRoleListRequest]) (res *connect.Response[rolev1.GetRoleListResponse], err error) {
+func (h *roleServiceHandler) GetRoleList(ctx context.Context, req *connect.Request[rolev1.GetRoleListRequest]) (res *connect.Response[rolev1.GetRoleListResponse], err error) {
 	roles, err := h.Repo.GetRoleList(ctx, &rolev1.Role{})
 	if err != nil {
 		return
@@ -50,7 +53,7 @@ func (h *RoleServiceHandler) GetRoleList(ctx context.Context, req *connect.Reque
 	return
 }
 
-func (h *RoleServiceHandler) GetRole(ctx context.Context, req *connect.Request[rolev1.GetRoleRequest]) (res *connect.Response[rolev1.GetRoleResponse], err error) {
+func (h *roleServiceHandler) GetRole(ctx context.Context, req *connect.Request[rolev1.GetRoleRequest]) (res *connect.Response[rolev1.GetRoleResponse], err error) {
 	payload := req.Msg
 	role, err := h.Repo.GetRole(ctx, &rolev1.Role{
 		Id: payload.Id,
@@ -70,7 +73,7 @@ func (h *RoleServiceHandler) GetRole(ctx context.Context, req *connect.Request[r
 	return
 }
 
-func (h *RoleServiceHandler) AddRole(ctx context.Context, req *connect.Request[rolev1.AddRoleRequest]) (res *connect.Response[rolev1.AddRoleResponse], err error) {
+func (h *roleServiceHandler) AddRole(ctx context.Context, req *connect.Request[rolev1.AddRoleRequest]) (res *connect.Response[rolev1.AddRoleResponse], err error) {
 	payload := req.Msg
 	role, err := h.Repo.AddRole(ctx, &rolev1.Role{
 		RoleName:        payload.Name,
@@ -92,7 +95,7 @@ func (h *RoleServiceHandler) AddRole(ctx context.Context, req *connect.Request[r
 	return
 }
 
-func (h *RoleServiceHandler) EditRole(ctx context.Context, req *connect.Request[rolev1.EditRoleRequest]) (res *connect.Response[rolev1.EditRoleResponse], err error) {
+func (h *roleServiceHandler) EditRole(ctx context.Context, req *connect.Request[rolev1.EditRoleRequest]) (res *connect.Response[rolev1.EditRoleResponse], err error) {
 	payload := req.Msg
 
 	role, err := h.Repo.GetRole(ctx, &rolev1.Role{Id: payload.Id})
@@ -124,7 +127,7 @@ func (h *RoleServiceHandler) EditRole(ctx context.Context, req *connect.Request[
 	return
 }
 
-func (h *RoleServiceHandler) RemoveRole(ctx context.Context, req *connect.Request[rolev1.RemoveRoleRequest]) (res *connect.Response[rolev1.RemoveRoleResponse], err error) {
+func (h *roleServiceHandler) RemoveRole(ctx context.Context, req *connect.Request[rolev1.RemoveRoleRequest]) (res *connect.Response[rolev1.RemoveRoleResponse], err error) {
 	payload := req.Msg
 
 	role, err := h.Repo.GetRole(ctx, &rolev1.Role{Id: payload.Id})

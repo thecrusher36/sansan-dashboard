@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/sandisuryadi36/sansan-dashboard/core"
+	"github.com/sandisuryadi36/sansan-dashboard/core/caller"
 	userv1 "github.com/sandisuryadi36/sansan-dashboard/gen/user/v1"
 	"github.com/sandisuryadi36/sansan-dashboard/gen/user/v1/userv1connect"
 	"github.com/sandisuryadi36/sansan-dashboard/handler"
@@ -20,7 +21,10 @@ func main() {
 	defer core.CloseDBMain()
 
 	// initiate RPC path and handler
-	serviceHandler := handler.NewUserHandler(repository.NewUserRepository(core.DBMain))
+	serviceHandler := handler.NewUserHandler(
+		repository.NewUserRepository(core.DBMain),
+		caller.New(),
+	)
 	path, handler := userv1connect.NewUserServiceHandler(
 		serviceHandler,
 		core.NewInterceotors(),

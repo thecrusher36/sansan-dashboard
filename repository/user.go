@@ -17,17 +17,17 @@ type UserRepository interface {
 	RemoveUser(context.Context, *userv1.User) (*userv1.User, error)
 }
 
-type GormUserRepo struct {
+type gormUserRepo struct {
 	db *gorm.DB
 }
 
-func NewUserRepository(dbMain *gorm.DB) *GormUserRepo {
-	return &GormUserRepo{
+func NewUserRepository(dbMain *gorm.DB) *gormUserRepo {
+	return &gormUserRepo{
 		db: dbMain,
 	}
 }
 
-func (repo *GormUserRepo) GetUserList(ctx context.Context, req *userv1.User) ([]*userv1.User, error) {
+func (repo *gormUserRepo) GetUserList(ctx context.Context, req *userv1.User) ([]*userv1.User, error) {
 	usersORM := []*userv1.UserORM{}
 	query := repo.db.Model(&userv1.UserORM{}).
 		Where("deleted_at IS NULL").
@@ -59,7 +59,7 @@ func (repo *GormUserRepo) GetUserList(ctx context.Context, req *userv1.User) ([]
 	return users, nil
 }
 
-func (repo *GormUserRepo) GetUser(ctx context.Context, req *userv1.User) (*userv1.User, error) {
+func (repo *gormUserRepo) GetUser(ctx context.Context, req *userv1.User) (*userv1.User, error) {
 	userORM := &userv1.UserORM{}
 	if req != nil {
 		reqORM, err := req.ToORM(ctx)
@@ -85,7 +85,7 @@ func (repo *GormUserRepo) GetUser(ctx context.Context, req *userv1.User) (*userv
 	return &userPB, nil
 }
 
-func (repo *GormUserRepo) AddUser(ctx context.Context, req *userv1.User) (*userv1.User, error) {
+func (repo *gormUserRepo) AddUser(ctx context.Context, req *userv1.User) (*userv1.User, error) {
 	userORM := &userv1.UserORM{}
 	if req != nil {
 		reqORM, err := req.ToORM(ctx)
@@ -111,7 +111,7 @@ func (repo *GormUserRepo) AddUser(ctx context.Context, req *userv1.User) (*userv
 	return &resPB, nil
 }
 
-func (repo *GormUserRepo) EditUser(ctx context.Context, req *userv1.User) (*userv1.User, error) {
+func (repo *gormUserRepo) EditUser(ctx context.Context, req *userv1.User) (*userv1.User, error) {
 	userORM := &userv1.UserORM{}
 	if req != nil {
 		reqORM, err := req.ToORM(ctx)
@@ -137,7 +137,7 @@ func (repo *GormUserRepo) EditUser(ctx context.Context, req *userv1.User) (*user
 	return &resPB, nil
 }
 
-func (repo *GormUserRepo) RemoveUser(ctx context.Context, req *userv1.User) (*userv1.User, error) {
+func (repo *gormUserRepo) RemoveUser(ctx context.Context, req *userv1.User) (*userv1.User, error) {
 	userORM := &userv1.UserORM{}
 	if req != nil {
 		reqORM, err := req.ToORM(ctx)

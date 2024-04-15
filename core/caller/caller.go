@@ -7,14 +7,27 @@ import (
 	"github.com/sandisuryadi36/sansan-dashboard/gen/user/v1/userv1connect"
 )
 
-var (
-	RoleClient = rolev1connect.NewRoleServiceClient(
+type ServiceCaller interface {
+	Role() rolev1connect.RoleServiceClient
+	User() userv1connect.UserServiceClient
+}
+
+type caller struct {}
+
+func New() ServiceCaller {
+	return &caller{}
+}
+
+func (c *caller) Role() rolev1connect.RoleServiceClient {
+	return rolev1connect.NewRoleServiceClient(
 		http.DefaultClient,
 		"http://localhost:9090",
 	)
+}
 
-	UserClient = userv1connect.NewUserServiceClient(
+func (c *caller) User() userv1connect.UserServiceClient {
+	return userv1connect.NewUserServiceClient(
 		http.DefaultClient,
 		"http://localhost:9091",
 	)
-)
+}
