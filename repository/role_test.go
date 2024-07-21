@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	commonv1 "github.com/sandisuryadi36/sansan-dashboard/gen/common/v1"
 	rolev1 "github.com/sandisuryadi36/sansan-dashboard/gen/role/v1"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -26,10 +27,19 @@ func TestRoleRepository_GetRoleList(t *testing.T) {
 	}
 
 	// Test GetRoleList
-	roles, err := repo.GetRoleList(ctx, nil)
+	roles, _, err := repo.GetRoleList(ctx, nil, &commonv1.StandardQuery{})
 	assert.NoError(t, err, "Failed to get role list")
 	assert.NotNil(t, roles, "Returned role list is nil")
 	assert.Len(t, roles, len(testData), "Unexpected length of role list")
+
+	// Test search
+	roles, pagination, err := repo.GetRoleList(ctx, nil, &commonv1.StandardQuery{Search: "user"})
+	assert.NoError(t, err, "Failed to get role list")
+	assert.NotNil(t, roles, "Returned role list is nil")
+	assert.Len(t, roles, 1, "Unexpected length of role list")
+	assert.Equal(t, int64(1), pagination.Page, "GetRoleList should return the correct pagination")
+	assert.Equal(t, int64(1), pagination.Total, "GetRoleList should return the correct pagination")
+	assert.Equal(t, int64(1), pagination.Found, "GetRoleList should return the correct pagination")
 
 	// Clean up test data
 	for _, role := range roles {

@@ -2,15 +2,17 @@ package repository
 
 import (
 	"context"
+	"strings"
 	"time"
 
+	commonv1 "github.com/sandisuryadi36/sansan-dashboard/gen/common/v1"
 	userv1 "github.com/sandisuryadi36/sansan-dashboard/gen/user/v1"
 	"github.com/sandisuryadi36/sansan-dashboard/libs/logger"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
-	GetUserList(context.Context, *userv1.User) ([]*userv1.User, error)
+	GetUserList(context.Context, *userv1.User, *commonv1.StandardQuery) ([]*userv1.User, *commonv1.StandardPaginationResponse, error)
 	GetUser(context.Context, *userv1.User) (*userv1.User, error)
 	AddUser(context.Context, *userv1.User) (*userv1.User, error)
 	EditUser(context.Context, *userv1.User) (*userv1.User, error)
@@ -27,23 +29,43 @@ func NewUserRepository(dbMain *gorm.DB) *gormUserRepo {
 	}
 }
 
-func (repo *gormUserRepo) GetUserList(ctx context.Context, req *userv1.User) ([]*userv1.User, error) {
+func (repo *gormUserRepo) GetUserList(ctx context.Context, req *userv1.User, query *commonv1.StandardQuery) ([]*userv1.User, *commonv1.StandardPaginationResponse, error) {
 	usersORM := []*userv1.UserORM{}
-	query := repo.db.Model(&userv1.UserORM{}).
+	if query.Page < 1 {
+		query.Page = 1
+	}
+	pagination := &commonv1.StandardPaginationResponse{
+		Page: query.Page,
+		Total: 0,
+		Found: 0,
+	}
+
+	statement := repo.db.Model(&userv1.UserORM{}).
 		Where("deleted_at IS NULL").
 		Order("created_at DESC")
 	if req != nil {
 		reqORM, err := req.ToORM(ctx)
 		if err != nil {
 			logger.Fatalln("Fail to convert request to ORM")
-			return nil, err
+			return nil, pagination, err
 		}
-		query = query.Where(&reqORM)
+		statement = statement.Where(&reqORM)
 	}
-	err := query.Find(&usersORM).Error
+
+	if query.Search != "" {
+		query.Search = strings.ToLower(query.Search)
+		statement = statement.Where("lower(user_name) LIKE ? OR lower(name) LIKE ? OR lower(email) LIKE ?", "%"+query.Search+"%", "%"+query.Search+"%", "%"+query.Search+"%")
+	}
+
+	statement.Count(&pagination.Total)
+	if query != nil && query.Page > 0 && query.PageSize > 0 {
+		statement = statement.Offset(int(query.Page - 1) * int(query.PageSize)).Limit(int(query.PageSize))
+	}
+
+	err := statement.Count(&pagination.Found).Find(&usersORM).Error
 	if err != nil {
 		logger.Errorln("Fail to get user list from DB")
-		return nil, err
+		return nil, pagination, err
 	}
 
 	users := make([]*userv1.User, len(usersORM))
@@ -51,12 +73,12 @@ func (repo *gormUserRepo) GetUserList(ctx context.Context, req *userv1.User) ([]
 		userPB, err := userORM.ToPB(ctx)
 		if err != nil {
 			logger.Fatalln("Fail to convert response to PB")
-			return nil, err
+			return nil, pagination, err
 		}
 		users[i] = &userPB
 	}
 
-	return users, nil
+	return users, pagination, nil
 }
 
 func (repo *gormUserRepo) GetUser(ctx context.Context, req *userv1.User) (*userv1.User, error) {

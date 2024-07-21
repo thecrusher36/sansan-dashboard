@@ -34,7 +34,9 @@ service RoleService {
 
 // ========= REQUEST START ==========
 
-message GetRoleListRequest {}
+message GetRoleListRequest {
+    common.v1.StandardQuery query = 1;
+}
 
 message GetRoleRequest {
     uint64 id = 1;
@@ -62,7 +64,8 @@ message RemoveRoleRequest {
 
 message GetRoleListResponse {
     repeated Role roles = 1;
-    common.v1.StandardResponse http_status = 2;
+    common.v1.StandardPaginationResponse pagination = 2;
+    common.v1.StandardResponse http_status = 3;
 }
 
 message GetRoleResponse {

@@ -29,13 +29,14 @@ func NewRoleHandler(repo repository.RoleRepository, sc caller.ServiceCaller) *ro
 }
 
 func (h *roleServiceHandler) GetRoleList(ctx context.Context, req *connect.Request[rolev1.GetRoleListRequest]) (res *connect.Response[rolev1.GetRoleListResponse], err error) {
-	roles, err := h.Repo.GetRoleList(ctx, &rolev1.Role{})
+	roles, pagination, err := h.Repo.GetRoleList(ctx, &rolev1.Role{}, &commonv1.StandardQuery{})
 	if err != nil {
 		return
 	}
 
 	res = connect.NewResponse(&rolev1.GetRoleListResponse{
 		Roles: roles,
+		Pagination: pagination,
 		HttpStatus: &commonv1.StandardResponse{
 			Status: "success",
 			Code:   http.StatusOK,

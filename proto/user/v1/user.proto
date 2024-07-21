@@ -35,7 +35,9 @@ service UserService {
 
 // ========= REQUEST START ==========
 
-message GetUserListRequest {}
+message GetUserListRequest {
+    common.v1.StandardQuery query = 1;
+}
 
 message GetUserRequest {
     uint64 id = 1;
@@ -69,7 +71,8 @@ message RemoveUserRequest {
 
 message GetUserListResponse {
     repeated User users = 1;
-    common.v1.StandardResponse http_status = 2;
+    common.v1.StandardPaginationResponse pagination = 2;
+    common.v1.StandardResponse http_status = 3;
 }
 
 message GetUserResponse {

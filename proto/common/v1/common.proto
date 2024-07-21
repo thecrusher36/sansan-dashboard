@@ -8,6 +8,18 @@ message StandardResponse {
     string error_message = 3;
 }
 
+message StandardQuery {
+    string search = 1;
+    int64 page = 2;
+    int64 page_size = 3;
+}
+
+message StandardPaginationResponse {
+    int64 page = 1;
+    int64 total = 2;
+    int64 found = 3;
+}
+
 message ErrorResponse {
     string message = 1;
     StandardResponse http_status = 2;

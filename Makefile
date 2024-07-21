@@ -16,6 +16,10 @@ run-user:
 	go run apps/user/main.go
 
 # test
+test-all:
+	cd repository/; go test -v;
+	cd handler/; go test -v;
+
 test-repo:
 	cd repository/; go test -v
 

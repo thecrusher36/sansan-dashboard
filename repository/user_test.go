@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	commonv1 "github.com/sandisuryadi36/sansan-dashboard/gen/common/v1"
 	userv1 "github.com/sandisuryadi36/sansan-dashboard/gen/user/v1"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -16,8 +17,8 @@ func TestUserRepository_GetUserList(t *testing.T) {
 
 	// Add test data
 	testData := []*userv1.User{
-		{UserName: "user1", CreatedAt: timestamppb.Now()},
-		{UserName: "user2", CreatedAt: timestamppb.Now()},
+		{UserName: "user1", Name: "name1", CreatedAt: timestamppb.Now()},
+		{UserName: "user2", Name: "name2", CreatedAt: timestamppb.Now()},
 	}
 
 	for _, user := range testData {
@@ -26,10 +27,19 @@ func TestUserRepository_GetUserList(t *testing.T) {
 	}
 
 	// Test GetUserList
-	users, err := repo.GetUserList(ctx, nil)
+	users, _, err := repo.GetUserList(ctx, nil, &commonv1.StandardQuery{})
 	assert.NoError(t, err, "GetUserList should not return an error")
 	assert.NotNil(t, users, "GetUserList should return a list of users")
 	assert.Len(t, users, len(testData), "GetUserList should return the correct number of users")
+	
+	// Test serach user
+	users, pagination, err := repo.GetUserList(ctx, nil, &commonv1.StandardQuery{Search: "1"})
+	assert.NoError(t, err, "GetUserList should not return an error")
+	assert.NotNil(t, users, "GetUserList should return a list of users")
+	assert.Len(t, users, 1, "GetUserList should return the correct number of users")
+	assert.Equal(t, int64(1), pagination.Page, "GetUserList should return the correct pagination")
+	assert.Equal(t, int64(1), pagination.Total, "GetUserList should return the correct pagination")
+	assert.Equal(t, int64(1), pagination.Found, "GetUserList should return the correct pagination")
 
 	// Clean up test data
 	for _, user := range users {

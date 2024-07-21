@@ -20,7 +20,7 @@ import (
 var (
 	DBMain    *gorm.DB
 	DBMainSQL *sql.DB
-	logLevel  gormLog.LogLevel = gormLog.Silent
+	logLevel  gormLog.LogLevel = gormLog.Info
 
 	OrmList []interface{} = []interface{}{
 		&rolev1.RoleORM{},

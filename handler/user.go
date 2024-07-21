@@ -25,19 +25,20 @@ type userServiceHandler struct {
 
 func NewUserHandler(repo repository.UserRepository, sc caller.ServiceCaller) *userServiceHandler {
 	return &userServiceHandler{
-		Repo: repo,
+		Repo:          repo,
 		ServiceCaller: sc,
 	}
 }
 
 func (h *userServiceHandler) GetUserList(ctx context.Context, req *connect.Request[userv1.GetUserListRequest]) (res *connect.Response[userv1.GetUserListResponse], err error) {
-	users, err := h.Repo.GetUserList(ctx, &userv1.User{})
+	users, pagination, err := h.Repo.GetUserList(ctx, &userv1.User{}, req.Msg.GetQuery())
 	if err != nil {
 		return
 	}
 
 	res = connect.NewResponse(&userv1.GetUserListResponse{
-		Users: users,
+		Users:      users,
+		Pagination: pagination,
 		HttpStatus: &commonv1.StandardResponse{
 			Status: "success",
 			Code:   http.StatusOK,

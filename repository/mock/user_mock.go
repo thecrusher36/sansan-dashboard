@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	commonv1 "github.com/sandisuryadi36/sansan-dashboard/gen/common/v1"
 	userv1 "github.com/sandisuryadi36/sansan-dashboard/gen/user/v1"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -86,18 +87,19 @@ func (mr *MockUserRepositoryMockRecorder) GetUser(arg0, arg1 any) *gomock.Call {
 }
 
 // GetUserList mocks base method.
-func (m *MockUserRepository) GetUserList(arg0 context.Context, arg1 *userv1.User) ([]*userv1.User, error) {
+func (m *MockUserRepository) GetUserList(arg0 context.Context, arg1 *userv1.User, arg2 *commonv1.StandardQuery) ([]*userv1.User, *commonv1.StandardPaginationResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserList", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetUserList", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]*userv1.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(*commonv1.StandardPaginationResponse)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // GetUserList indicates an expected call of GetUserList.
-func (mr *MockUserRepositoryMockRecorder) GetUserList(arg0, arg1 any) *gomock.Call {
+func (mr *MockUserRepositoryMockRecorder) GetUserList(arg0, arg1, arg2 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserList", reflect.TypeOf((*MockUserRepository)(nil).GetUserList), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserList", reflect.TypeOf((*MockUserRepository)(nil).GetUserList), arg0, arg1, arg2)
 }
 
 // RemoveUser mocks base method.
