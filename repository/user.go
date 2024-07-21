@@ -72,7 +72,9 @@ func (repo *gormUserRepo) GetUser(ctx context.Context, req *userv1.User) (*userv
 
 	err := repo.db.Where("deleted_at IS NULL").First(userORM, userORM).Error
 	if err != nil {
-		logger.Errorln("Fail to get user from DB")
+		if err != gorm.ErrRecordNotFound {
+			logger.Errorln("Fail to get user from DB")
+		}
 		return nil, err
 	}
 

@@ -72,7 +72,9 @@ func (repo *gormRoleRepo) GetRole(ctx context.Context, req *rolev1.Role) (res *r
 
 	err = repo.db.Where("deleted_at IS NULL").First(roleORM, roleORM).Error
 	if err != nil {
-		logger.Errorln("Fail to get role list from DB")
+		if err != gorm.ErrRecordNotFound {
+			logger.Errorln("Fail to get role list from DB")
+		}
 		return
 	}
 

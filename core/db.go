@@ -21,14 +21,22 @@ var (
 	DBMain    *gorm.DB
 	DBMainSQL *sql.DB
 	logLevel  gormLog.LogLevel = gormLog.Silent
+
+	OrmList []interface{} = []interface{}{
+		&rolev1.RoleORM{},
+		&userv1.UserORM{},
+		&featurev1.FeatureORM{},
+		&featurev1.ServiceORM{},
+		&featurev1.UserExtraFeatureORM{},
+		&featurev1.FeatureTransactionORM{},
+		&transactionv1.UserTransactionORM{},
+	}
 )
 
 func StartDBConnection() {
 	logger.Printf("Starting Db Connections...")
 
-	logLevel = gormLog.Info
 	InitDBMain()
-
 }
 
 func InitDBMain() {
@@ -87,21 +95,8 @@ func MigrateDB() error {
 	InitDBMain()
 	defer CloseDBMain()
 
-	ormList := []interface{}{
-		&rolev1.RoleORM{},
-		&userv1.UserORM{},
-		&featurev1.FeatureORM{},
-		&featurev1.ServiceORM{},
-		&featurev1.UserExtraFeatureORM{},
-		&featurev1.FeatureTransactionORM{},
-		&transactionv1.UserTransactionORM{},
-	}
-
 	logger.Println("Migration process begin...")
-	if err := DBMain.AutoMigrate(
-		// List table from proto gorm
-		ormList...,
-	); err != nil {
+	if err := DBMain.AutoMigrate(OrmList...); err != nil {
 		logger.Fatalf("Migration failed: %v", err)
 		os.Exit(1)
 	}

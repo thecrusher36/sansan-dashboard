@@ -17,14 +17,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type UserHandler interface {
-	GetUserList(context.Context, *connect.Request[userv1.GetUserListRequest]) (*connect.Response[userv1.GetUserListResponse], error)
-	GetUser(context.Context, *connect.Request[userv1.GetUserRequest]) (*connect.Response[userv1.GetUserResponse], error)
-	AddUser(context.Context, *connect.Request[userv1.AddUserRequest]) (*connect.Response[userv1.AddUserResponse], error)
-	EditUser(context.Context, *connect.Request[userv1.EditUserRequest]) (*connect.Response[userv1.EditUserResponse], error)
-	RemoveUser(context.Context, *connect.Request[userv1.RemoveUserRequest]) (*connect.Response[userv1.RemoveUserResponse], error)
-}
-
 type userServiceHandler struct {
 	userv1connect.UnimplementedUserServiceHandler
 	Repo          repository.UserRepository

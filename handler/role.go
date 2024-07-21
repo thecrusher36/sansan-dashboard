@@ -15,14 +15,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type RoleHandler interface {
-	GetRoleList(context.Context, *connect.Request[rolev1.GetRoleListRequest]) (*connect.Response[rolev1.GetRoleListResponse], error)
-	GetRole(context.Context, *connect.Request[rolev1.GetRoleRequest]) (*connect.Response[rolev1.GetRoleResponse], error)
-	AddRole(context.Context, *connect.Request[rolev1.AddRoleRequest]) (*connect.Response[rolev1.AddRoleResponse], error)
-	EditRole(context.Context, *connect.Request[rolev1.EditRoleRequest]) (*connect.Response[rolev1.EditRoleResponse], error)
-	RemoveRole(context.Context, *connect.Request[rolev1.RemoveRoleRequest]) (*connect.Response[rolev1.RemoveRoleResponse], error)
-}
-
 type roleServiceHandler struct {
 	rolev1connect.UnimplementedRoleServiceHandler
 	Repo          repository.RoleRepository
