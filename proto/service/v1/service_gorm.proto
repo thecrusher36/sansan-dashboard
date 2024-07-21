@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package service.v1;
+
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-gorm/options/gorm.proto";
+import "role/v1/role_gorm.proto";
+
+message Service {
+    option (gorm.opts) = {
+        ormable:true,
+        table: "services",
+    };
+
+    uint64 id = 1 [(gorm.field).tag = {primary_key: true not_null: true}];
+    string service_name = 2;
+    string service_description = 3;
+    repeated role.v1.Role roles = 4  [(gorm.field).many_to_many = {}];
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    google.protobuf.Timestamp deleted_at = 7;
+}

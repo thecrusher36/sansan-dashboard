@@ -7,6 +7,7 @@ import (
 
 	featurev1 "github.com/sandisuryadi36/sansan-dashboard/gen/feature/v1"
 	rolev1 "github.com/sandisuryadi36/sansan-dashboard/gen/role/v1"
+	servicev1 "github.com/sandisuryadi36/sansan-dashboard/gen/service/v1"
 	transactionv1 "github.com/sandisuryadi36/sansan-dashboard/gen/transaction/v1"
 	userv1 "github.com/sandisuryadi36/sansan-dashboard/gen/user/v1"
 	"github.com/sandisuryadi36/sansan-dashboard/libs"
@@ -26,7 +27,7 @@ var (
 		&rolev1.RoleORM{},
 		&userv1.UserORM{},
 		&featurev1.FeatureORM{},
-		&featurev1.ServiceORM{},
+		&servicev1.ServiceORM{},
 		&featurev1.UserExtraFeatureORM{},
 		&featurev1.FeatureTransactionORM{},
 		&transactionv1.UserTransactionORM{},
